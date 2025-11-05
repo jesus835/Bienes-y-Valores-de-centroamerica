@@ -297,24 +297,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar: verificar sesión o mostrar pantalla de bienvenida
     if (tieneSesion) {
-        // Si hay sesión guardada, mostrar formulario principal directamente
+        // Si hay sesión guardada, mostrar perfil directamente
+        // Ocultar contenedor principal
         if (mainContainer) {
-            mainContainer.style.display = 'block';
+            mainContainer.style.display = 'none';
         }
         const header = document.querySelector('.header');
         if (header) {
-            header.style.display = 'block';
+            header.style.display = 'none';
         }
         const navButtons = document.getElementById('navButtons');
         if (navButtons) {
-            navButtons.style.display = 'flex';
+            navButtons.style.display = 'none';
         }
         // Ocultar pantallas de autenticación
         if (authWelcome) authWelcome.style.display = 'none';
         if (authLogin) authLogin.style.display = 'none';
         if (authRegister) authRegister.style.display = 'none';
-        // Mostrar sección 1
-    cambiarPaso(1);
+        // Mostrar sección de perfil (section-4)
+        const section4 = document.getElementById('section-4');
+        if (section4) {
+            section4.style.display = 'block';
+        }
+        // Cargar datos del perfil
+        cargarDatosPerfil();
+        // Actualizar botones de navegación para mostrar Config como activo
+        actualizarBotonesNavegacion(4);
     } else {
         // Si no hay sesión, mostrar pantalla de bienvenida
         if (authWelcome && mainContainer) {
@@ -1680,26 +1688,34 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Verificar si es admin
                             verificarAdmin();
                             
-                            // Después de 1 segundo, entrar automáticamente
+                            // Después de 1 segundo, entrar automáticamente al perfil
                             setTimeout(function() {
-                                // Ocultar pantalla de login y mostrar formulario principal
+                                // Ocultar pantalla de login
                                 if (authLogin) {
                                     authLogin.style.display = 'none';
                                 }
+                                // Ocultar contenedor principal
                                 const mainContainer = document.querySelector('.container');
                                 if (mainContainer) {
-                                    mainContainer.style.display = 'block';
+                                    mainContainer.style.display = 'none';
                                 }
                                 const header = document.querySelector('.header');
                                 if (header) {
-                                    header.style.display = 'block';
+                                    header.style.display = 'none';
                                 }
                                 const navButtons = document.getElementById('navButtons');
                                 if (navButtons) {
-                                    navButtons.style.display = 'flex';
+                                    navButtons.style.display = 'none';
                                 }
-                                // Mostrar sección 1
-                                cambiarPaso(1);
+                                // Mostrar sección de perfil
+                                const section4 = document.getElementById('section-4');
+                                if (section4) {
+                                    section4.style.display = 'block';
+                                }
+                                // Cargar datos del perfil
+                                cargarDatosPerfil();
+                                // Actualizar botones de navegación para mostrar Config como activo
+                                actualizarBotonesNavegacion(4);
                             }, 1000);
                         } else {
                             // Credenciales incorrectas
@@ -1887,26 +1903,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                // Después de 1.5 segundos, entrar automáticamente
+                // Después de 1.5 segundos, entrar automáticamente al perfil
                 setTimeout(function() {
-                    // Ocultar pantalla de registro y mostrar formulario principal
+                    // Ocultar pantalla de registro
                     if (authRegister) {
                         authRegister.style.display = 'none';
                     }
+                    // Ocultar contenedor principal
                     const mainContainer = document.querySelector('.container');
                     if (mainContainer) {
-                        mainContainer.style.display = 'block';
+                        mainContainer.style.display = 'none';
                     }
                     const header = document.querySelector('.header');
                     if (header) {
-                        header.style.display = 'block';
+                        header.style.display = 'none';
                     }
                     const navButtons = document.getElementById('navButtons');
                     if (navButtons) {
-                        navButtons.style.display = 'flex';
+                        navButtons.style.display = 'none';
                     }
-                    // Mostrar sección 1
-                    cambiarPaso(1);
+                    // Mostrar sección de perfil
+                    const section4 = document.getElementById('section-4');
+                    if (section4) {
+                        section4.style.display = 'block';
+                    }
+                    // Cargar datos del perfil
+                    cargarDatosPerfil();
+                    // Actualizar botones de navegación para mostrar Config como activo
+                    actualizarBotonesNavegacion(4);
                 }, 1500);
             }, 1000);
         });
