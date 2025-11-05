@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro - CreciKids</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Registro de Usuario</h1>
+            <!-- Indicador de progreso -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Información Básica</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Documentos</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Verificación</div>
+                </div>
+            </div>
+        </div>
+        
+        <form id="registroForm" enctype="multipart/form-data">
+            <!-- Sección 1: Información Básica (Solo Texto) -->
+            <div class="form-section active" id="section-1">
+                <h2 class="section-title">1. Información Básica</h2>
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre Completo:</label>
+                    <input type="text" id="nombre_completo" name="nombre_completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero_dpi">NO. DPI:</label>
+                    <input type="text" id="numero_dpi" name="numero_dpi" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nit">Número de NIT:</label>
+                    <input type="text" id="nit" name="nit" required>
+                    <small>Número de Identificación Tributaria</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Número de Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+
+                <div class="form-group submit-section">
+                    <button type="button" id="nextToStep2" class="btn-next">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 2: Documentos (Imágenes) -->
+            <div class="form-section" id="section-2" style="display: none;">
+                <h2 class="section-title">2. Documentos Requeridos</h2>
+                <div id="mensaje" class="mensaje" style="display: none;"></div>
+
+            <div class="form-group">
+                <label for="dpi_frente">Foto de DPI - Frente:</label>
+                <input type="file" id="dpi_frente" name="dpi_frente" accept="image/*" required>
+                <small>Imagen del frente del documento de identidad</small>
+            </div>
+
+            <div class="form-group">
+                <label for="dpi_reverso">Foto de DPI - Reverso:</label>
+                <input type="file" id="dpi_reverso" name="dpi_reverso" accept="image/*" required>
+                <small>Imagen del reverso del documento de identidad</small>
+            </div>
+
+            <div class="form-group">
+                <label for="recibo_luz">Foto de Recibo de Luz Reciente:</label>
+                <input type="file" id="recibo_luz" name="recibo_luz" accept="image/*" required>
+                <small>Recibo de servicio eléctrico reciente</small>
+            </div>
+
+            <div class="form-group">
+                <label class="radio-label">Tipo de Documento:</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="tipo_documento" value="carta_laboral" required>
+                        <span>Carta Laboral</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="tipo_documento" value="estados_cuenta" required>
+                        <span>Estados de Cuenta (3 últimos)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="carta_laboral_group" style="display: none;">
+                <label for="carta_laboral">Foto de Carta Laboral:</label>
+                <input type="file" id="carta_laboral" name="carta_laboral" accept="image/*">
+                <small>Documento que certifique la relación laboral</small>
+            </div>
+
+            <div id="estados_cuenta_group" style="display: none !important;">
+                <div class="form-group">
+                    <label for="estado_cuenta_1">Estado de Cuenta 1:</label>
+                    <input type="file" id="estado_cuenta_1" name="estado_cuenta_1" accept="image/*">
+                    <small>Primer estado de cuenta</small>
+                </div>
+                <div class="form-group">
+                    <label for="estado_cuenta_2">Estado de Cuenta 2:</label>
+                    <input type="file" id="estado_cuenta_2" name="estado_cuenta_2" accept="image/*">
+                    <small>Segundo estado de cuenta</small>
+                </div>
+                <div class="form-group">
+                    <label for="estado_cuenta_3">Estado de Cuenta 3:</label>
+                    <input type="file" id="estado_cuenta_3" name="estado_cuenta_3" accept="image/*">
+                    <small>Tercer estado de cuenta</small>
+                </div>
+            </div>
+
+                <!-- Botón de envío -->
+                <div class="form-group submit-section">
+                    <button type="submit" id="submitBtn">Guardar y Continuar</button>
+                </div>
+            </div>
+
+            <!-- Sección 3: Verificación (Pantalla de Confirmación) -->
+            <div class="form-section verification-section confirmation-screen" id="section-3" style="display: none;">
+                <div class="confirmation-content">
+                    <div class="confirmation-icon">
+                        <div class="checkmark-circle">
+                            <svg class="checkmark" viewBox="0 0 52 52">
+                                <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <h2 class="confirmation-title">Registro Confirmado</h2>
+                    
+                    <div class="confirmation-text">
+                        <p>Gracias por tu registro. Recibirás una confirmación por correo electrónico Cuando tengamos una respuesta.</p>
+                        <p>Puedes revisar el estado de tu registro en la página de <strong>Registros</strong>.</p>
+                    </div>
+                    
+                    <div class="confirmation-buttons">
+                        <button type="button" class="confirmation-btn btn-primary" id="continueShoppingBtn">Registros</button>
+                        <button type="button" class="confirmation-btn btn-secondary" id="shareBtn">Perfil</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Pantalla de Carga -->
+        <div class="loading-screen" id="loadingScreen" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Procesando tu registro...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Autenticación - Pantalla de Bienvenida -->
+    <div class="auth-container" id="auth-welcome" style="display: none;">
+        <div class="auth-content">
+            <div class="auth-illustration">
+                <img src="https://i.imgur.com/al5tjvz.png" alt="Ilustración" class="welcome-illustration">
+            </div>
+            
+            <h1 class="auth-title">Gestión Financiera</h1>
+            <p class="auth-subtitle">Solicita tu Crédito Rápido, Confiable y Seguro<br>Acceso inmediato</p>
+            
+            <div class="auth-buttons">
+                <button type="button" class="auth-btn btn-primary" id="goToLoginBtn">Iniciar Sesión</button>
+                <button type="button" class="auth-btn btn-secondary" id="goToRegisterBtn">Registrarse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Login -->
+    <div class="auth-container" id="auth-login" style="display: none;">
+        <div class="auth-content">
+            <button type="button" class="auth-back-btn" id="backFromLoginBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            
+            <h1 class="auth-title">Iniciar Sesión</h1>
+            <p class="auth-subtitle">Bienvenido a Bienes y Valores</p>
+            
+            <form class="auth-form" id="loginForm">
+                <div class="auth-input-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                
+                <div class="auth-input-group">
+                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                </div>
+                
+                <button type="submit" class="auth-btn btn-primary">Iniciar Sesión</button>
+            </form>
+            
+            <p class="auth-switch">
+                ¿No tienes una cuenta? <a href="#" class="auth-link" id="switchToRegisterFromLogin">Registrarse</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Sección de Register -->
+    <div class="auth-container" id="auth-register" style="display: none;">
+        <div class="auth-content">
+            <button type="button" class="auth-back-btn" id="backFromRegisterBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            
+            <h1 class="auth-title">Crear Cuenta</h1>
+            <p class="auth-subtitle">Crea una cuenta con Bienes y Valores de Centroamérica Financiera</p>
+            
+            <form class="auth-form" id="registerForm">
+                <div class="auth-input-group">
+                    <input type="text" id="registerEmail" name="Email" placeholder="Email o Teléfono" required>
+                </div>
+                
+                <div class="auth-input-group">
+                    <input type="password" id="registerPassword" name="Contraseña" placeholder="Crear Contraseña" required>
+                </div>
+                
+                <div class="auth-input-group">
+                    <input type="password" id="registerConfirmPassword" placeholder="Confirmar Contraseña" required>
+                </div>
+                
+                <button type="submit" class="auth-btn btn-primary">Registrarse</button>
+            </form>
+            
+            <div id="registerStatus" class="register-status" style="display: none;">
+                <div class="register-spinner"></div>
+                <p class="register-status-text" id="registerStatusText">Creando cuenta...</p>
+            </div>
+            
+            <p class="auth-switch">
+                ¿Ya tienes una cuenta? <a href="#" class="auth-link" id="switchToLoginFromRegister">Iniciar Sesión</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Sección de Perfil/Configuración - Completamente Independiente -->
+    <div class="profile-container" id="section-4" style="display: none;">
+        <div class="profile-header">
+            <div class="profile-picture-container">
+                <div class="profile-picture">
+                    <img src="https://i.imgur.com/nxFzt7V.png" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                </div>
+                <div class="verification-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-info">
+            <h2 class="profile-name" id="profileName">USUARIO</h2>
+            <p class="profile-email" id="profileEmail">usuario@email.com</p>
+        </div>
+
+        <div class="profile-menu">
+            <button type="button" class="menu-item" id="menuProfile">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="menu-text">Enviar Documentos</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <button type="button" class="menu-item" id="menuMessages">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-text">Procesos Iniciados</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <button type="button" class="menu-item" id="menuSettings">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364-6.364l-4.243 4.243m-4.242 0L5.636 5.636m12.728 12.728l-4.243-4.243m-4.242 0L5.636 18.364"></path>
+                </svg>
+                <span class="menu-text">Configuración</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <button type="button" class="menu-item" id="menuAdmin" style="display: none;">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="menu-text">Admin</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+        </div>
+
+        <button type="button" class="logout-btn" id="logoutBtn">
+            <svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span class="logout-text">Cerrar Sesión</span>
+        </button>
+        </div>
+
+        <!-- Sección de Admin -->
+        <div class="profile-container" id="section-6" style="display: none;">
+            <div class="profile-header">
+                <button type="button" class="auth-back-btn" id="backFromSection6Btn" style="position: absolute; left: 20px; top: 20px; z-index: 10; color: white;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <h2 class="profile-name" style="color: white; text-align: center;">Admin</h2>
+            </div>
+            
+            <div class="profile-info" style="padding: 20px; display: flex; flex-direction: column; height: calc(100vh - 200px); overflow: hidden;">
+                <div id="adminUsersList" style="text-align: center; color: #666; overflow-y: auto; flex: 1; padding-right: 10px;">
+                    <p>Cargando usuarios...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Procesos Iniciados -->
+        <div class="profile-container" id="section-5" style="display: none;">
+            <div class="profile-header">
+                <button type="button" class="auth-back-btn" id="backFromSection5Btn" style="position: absolute; left: 20px; top: 20px; z-index: 10; color: white;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <h2 class="profile-name" style="color: white; text-align: center;">Procesos Iniciados</h2>
+            </div>
+            
+            <div class="profile-info" style="padding: 20px; display: flex; flex-direction: column; height: calc(100vh - 200px); overflow: hidden;">
+                <div id="procesosList" style="overflow-y: auto; flex: 1; padding-right: 10px;">
+                    <p style="text-align: center; color: #666;">Cargando procesos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Iframe oculto para envío del formulario -->
+        <iframe id="hiddenIframe" name="hiddenIframe" style="display: none;"></iframe>
+
+        <!-- Modal de Advertencia -->
+        <div class="modal-overlay" id="warningModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="modal-body">
+                    <h3 class="modal-title">¡Advertencia!</h3>
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn" id="modalOkBtn">CERRAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Configuración -->
+        <div class="modal-overlay" id="settingsModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #082d48;">
+                    <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364-6.364l-4.243 4.243m-4.242 0L5.636 5.636m12.728 12.728l-4.243-4.243m-4.242 0L5.636 18.364"></path>
+                    </svg>
+                </div>
+                <div class="modal-body">
+                    <h3 class="modal-title">Configuración</h3>
+                    <div style="margin-top: 20px;">
+                        <button type="button" class="modal-btn" id="deleteAccountBtn" style="background: #dc3545; color: white; width: 100%; margin-bottom: 10px;">
+                            Borrar Cuenta
+                        </button>
+                        <button type="button" class="modal-btn" id="closeSettingsModalBtn" style="background: #082d48; color: white; width: 100%;">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de navegación inferior -->
+        <div class="nav-buttons" id="navButtons">
+            <button type="button" class="nav-item active" data-step="1" id="navStep1">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="nav-label">Inicio</span>
+                <div class="nav-indicator"></div>
+            </button>
+            <button type="button" class="nav-item" data-step="2" id="navStep2">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span class="nav-label">Documentos</span>
+            </button>
+            <button type="button" class="nav-item" data-step="3" id="navStep3">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="nav-label">Verificación</span>
+            </button>
+            <button type="button" class="nav-item" id="navSettings">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364-6.364l-4.243 4.243m-4.242 0L5.636 5.636m12.728 12.728l-4.243-4.243m-4.242 0L5.636 18.364"></path>
+                </svg>
+                <span class="nav-label">Config</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
