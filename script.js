@@ -1,5 +1,5 @@
 // URL del script de Google Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwctxUpwRGXXg5pPlG-Y3i-5prF3_r6WkjjxrTVZPri6LH6YLyFBYO9jP5EeKuBTIZCNA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registroForm');
@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Hacer petición al script de Google Apps Script para obtener todos los registros
-        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CXxCSpmL5BiVwLLjP6ACCJgqJ0xpLBhCJR01avXVSq9Qoio6yraIDsnNDFqR8KuD/exec';
+        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
         
         fetch(REGISTROS_SCRIPT_URL)
             .then(response => response.json())
@@ -1153,7 +1153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         adminUsersList.innerHTML = '<p>Cargando usuarios...</p>';
         
         // Hacer petición al script de Google Apps Script para obtener todos los registros
-        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CXxCSpmL5BiVwLLjP6ACCJgqJ0xpLBhCJR01avXVSq9Qoio6yraIDsnNDFqR8KuD/exec';
+        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
         
         fetch(REGISTROS_SCRIPT_URL)
             .then(response => response.json())
@@ -1258,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const emailActualizado = emailBase + '/aprobado';
         
         // Enviar datos al Google Apps Script para aprobar
-        const APPROVE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwctxUpwRGXXg5pPlG-Y3i-5prF3_r6WkjjxrTVZPri6LH6YLyFBYO9jP5EeKuBTIZCNA/exec';
+        const APPROVE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
         
         // Crear formulario temporal para enviar los datos
         let iframe = document.getElementById('hiddenIframe');
@@ -1346,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const emailActualizado = emailBase + '/denegado';
         
         // Enviar datos al Google Apps Script para denegar
-        const DENY_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwctxUpwRGXXg5pPlG-Y3i-5prF3_r6WkjjxrTVZPri6LH6YLyFBYO9jP5EeKuBTIZCNA/exec';
+        const DENY_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
         
         // Crear formulario temporal para enviar los datos
         let iframe = document.getElementById('hiddenIframe');
