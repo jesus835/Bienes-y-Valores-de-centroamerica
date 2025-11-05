@@ -8,9 +8,11 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bienesyvalorescentroamerica.netlify.app/">
     <meta property="og:title" content="Bienes y Valores de Centroamérica Financiera">
     <meta property="og:description" content="Solicita tu Crédito Rápido, Confiable y Seguro. Acceso inmediato a servicios financieros.">
     <meta property="og:image" content="https://i.imgur.com/al5tjvz.png">
+    <meta property="og:site_name" content="Bienes y Valores de Centroamérica Financiera">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -213,13 +215,13 @@
             <h1 class="auth-title">Iniciar Sesión</h1>
             <p class="auth-subtitle">Bienvenido a Bienes y Valores</p>
             
-            <form class="auth-form" id="loginForm">
+            <form class="auth-form" id="loginForm" autocomplete="on">
                 <div class="auth-input-group">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="email" id="loginEmail" name="email" placeholder="Email" autocomplete="email" required>
                 </div>
                 
                 <div class="auth-input-group">
-                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                    <input type="password" id="loginPassword" name="password" placeholder="Contraseña" autocomplete="current-password" required>
                 </div>
                 
                 <button type="submit" class="auth-btn btn-primary">Iniciar Sesión</button>
@@ -243,17 +245,17 @@
             <h1 class="auth-title">Crear Cuenta</h1>
             <p class="auth-subtitle">Crea una cuenta con Bienes y Valores de Centroamérica Financiera</p>
             
-            <form class="auth-form" id="registerForm">
+            <form class="auth-form" id="registerForm" autocomplete="on">
                 <div class="auth-input-group">
-                    <input type="text" id="registerEmail" name="Email" placeholder="Email o Teléfono" required>
+                    <input type="text" id="registerEmail" name="Email" placeholder="Email o Teléfono" autocomplete="email" required>
                 </div>
                 
                 <div class="auth-input-group">
-                    <input type="password" id="registerPassword" name="Contraseña" placeholder="Crear Contraseña" required>
+                    <input type="password" id="registerPassword" name="Contraseña" placeholder="Crear Contraseña" autocomplete="new-password" required>
                 </div>
                 
                 <div class="auth-input-group">
-                    <input type="password" id="registerConfirmPassword" placeholder="Confirmar Contraseña" required>
+                    <input type="password" id="registerConfirmPassword" placeholder="Confirmar Contraseña" autocomplete="new-password" required>
                 </div>
                 
                 <button type="submit" class="auth-btn btn-primary">Registrarse</button>
