@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Hacer petición al script de Google Apps Script para obtener todos los registros
-        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
+        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CXxCSpmL5BiVwLLjP6ACCJgqJ0xpLBhCJR01avXVSq9Qoio6yraIDsnNDFqR8KuD/exec';
         
         fetch(REGISTROS_SCRIPT_URL)
             .then(response => response.json())
@@ -1153,7 +1153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         adminUsersList.innerHTML = '<p>Cargando usuarios...</p>';
         
         // Hacer petición al script de Google Apps Script para obtener todos los registros
-        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
+        const REGISTROS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CXxCSpmL5BiVwLLjP6ACCJgqJ0xpLBhCJR01avXVSq9Qoio6yraIDsnNDFqR8KuD/exec';
         
         fetch(REGISTROS_SCRIPT_URL)
             .then(response => response.json())
