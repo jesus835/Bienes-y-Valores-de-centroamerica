@@ -1,5 +1,5 @@
 // URL del script de Google Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEUmjqqaswzrWoZpiGzwyhy02ao0x3wF6WVxfMXH6wVgF9RV1rBwBSF2P9MtWN_jfbmg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHTjCF_5jNdzNF8IirvZDuGUJ86ouOCKF1EJDxJMKB8KDqfyaGjlMi4z6bOtY_PrLOaQ/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registroForm');
