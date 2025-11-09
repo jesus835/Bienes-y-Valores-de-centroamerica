@@ -1,11 +1,120 @@
 // URL del script de Google Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyevpdbaXbh0mMa3lbWwcJnfRxS8joc2-MjOD2K6sRcPd702V-gfbez90KkVWAo4PvnNw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEUmjqqaswzrWoZpiGzwyhy02ao0x3wF6WVxfMXH6wVgF9RV1rBwBSF2P9MtWN_jfbmg/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registroForm');
     const submitBtn = document.getElementById('submitBtn');
     const mensajeDiv = document.getElementById('mensaje');
+    const introScreen = document.getElementById('introScreen');
+    const introGetStartedBtn = document.getElementById('introGetStartedBtn');
+    const homeShowcase = document.getElementById('homeShowcase');
+    const homeStartBtn = document.getElementById('homeStartBtn');
+    const homeProfileBtn = document.getElementById('homeProfileBtn');
+    const homeShowcaseBrands = document.getElementById('homeShowcaseBrands') || document.querySelector('.home-showcase__brands');
+    const menuHomeShowcase = document.getElementById('menuHomeShowcase');
+    const productDetail = document.getElementById('productDetail');
+    const productDetailBackBtn = document.getElementById('productDetailBackBtn');
+    const productDetailImage = document.getElementById('productDetailImage');
+    const productDetailName = document.getElementById('productDetailName');
+    const productDetailRating = document.getElementById('productDetailRating');
+    const productDetailDescription = document.getElementById('productDetailDescription');
+    const productDetailCapacity = document.getElementById('productDetailCapacity');
+    const productDetailSpeed = document.getElementById('productDetailSpeed');
+    const productDetailPower = document.getElementById('productDetailPower');
+    const productDetailPrice = document.getElementById('productDetailPrice');
+    const productDetailBuyBtn = document.querySelector('.product-detail__buy-btn');
+    const catalogList = document.getElementById('catalogList');
+    const catalogListItems = document.getElementById('catalogListItems');
+    const catalogListBackBtn = document.getElementById('catalogListBackBtn');
+    const catalogListHomeBtn = document.getElementById('catalogListHomeBtn');
+    const catalogListProfileBtn = document.getElementById('catalogListProfileBtn');
     let currentStep = 1;
+    let origenDetalle = 'home';
+    let ultimaMotoSeleccionada = null;
+    const MOTOS_API_URL = 'https://script.google.com/macros/s/AKfycbwMvaKE6Mh8e9vZWcrQTiLeBORPkyeu3TuE1OlpB6wgh5Yl_dk-acHNlxcpx29K0sA5/exec';
+    const LOGIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU4ZkKAUYLRG6TdJAxwGk921LcHnBiU2pzxa_Yk6g3h_pCMqUZEjuwXtq3fDChr2oe/exec';
+    const REGISTER_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-jI6oMlKNmteiK3XMiYNrzoqSUkYA7wtEuKbirRmTrZCDZXCuLH9JjxTSXF2GowivQg/exec';
+    const DEFAULT_BIKE_IMAGE = 'https://i.imgur.com/1Mi2DWr.png';
+    const APACHE_BRAND_IMAGE = 'https://i.imgur.com/SIsl6dt.png';
+    const FALLBACK_MOTOS = [
+        {
+            id: 'fallback-1',
+            marca: 'TVS',
+            linea: 'Apache RTR 200 4V',
+            nombre: 'TVS Apache RTR 200 4V',
+            precioTexto: 'Q 20,990',
+            precioNumero: 20990,
+            rating: '4.8',
+            descripcion: 'TVS Apache RTR 200 4V. Placas gratis y trámite 100% en línea.',
+            cuotas: '24 Cuotas Q 1,050',
+            gasto: 'Gasto adm. Q 2,099',
+            promocion: 'Placas Gratis + Trámite 100% Línea',
+            imagen: 'https://i.imgur.com/IdfA3iK.png'
+        },
+        {
+            id: 'fallback-2',
+            marca: 'TVS',
+            linea: 'Ronin 225',
+            nombre: 'TVS Ronin 225',
+            precioTexto: 'Q 29,000',
+            precioNumero: 29000,
+            rating: '4.6',
+            descripcion: 'TVS Ronin 225. Estilo urbano premium con motor de alto desempeño.',
+            cuotas: '24 Cuotas Q 1,451',
+            gasto: 'Gasto adm. Q 2,900',
+            promocion: 'Placas Gratis - Trámite 100% Línea',
+            imagen: 'https://i.imgur.com/rt24bUg.png'
+        },
+        {
+            id: 'fallback-3',
+            marca: 'TVS',
+            linea: 'Raider 125',
+            nombre: 'TVS Raider 125',
+            precioTexto: 'Q 15,290',
+            precioNumero: 15290,
+            rating: '4.5',
+            descripcion: 'TVS Raider 125. Ahorro de combustible con diseño agresivo.',
+            cuotas: '24 Cuotas Q 765',
+            gasto: 'Gasto adm. Q 1,529',
+            promocion: 'Placas Gratis - Promoción por tiempo limitado',
+            imagen: 'https://i.imgur.com/mBf7zDN.png'
+        },
+        {
+            id: 'fallback-4',
+            marca: 'TVS',
+            linea: 'NTORQ 125',
+            nombre: 'TVS NTORQ 125',
+            precioTexto: 'Q 14,990',
+            precioNumero: 14990,
+            rating: '4.4',
+            descripcion: 'TVS NTORQ 125. Scooter conectado con estilo deportivo y tecnología SmartXonnect.',
+            cuotas: '24 Cuotas Q 750',
+            gasto: 'Gasto adm. Q 1,499',
+            promocion: 'Placas Gratis + Trámite 100% Línea',
+            imagen: 'https://i.imgur.com/G0I4Hqq.png'
+        }
+    ];
+    let motosData = [];
+    let lineaSeleccionada = null;
+    const numeroDpiInput = document.getElementById('numero_dpi');
+    const nitInput = document.getElementById('nit');
+    const telefonoInput = document.getElementById('telefono');
+    const numeroDpiRegex = /^\d+$/;
+    const nitRegex = /^\d+$/;
+
+    function sanitizarInputNumerico(input) {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            const limpio = input.value.replace(/\D/g, '');
+            if (input.value !== limpio) {
+                input.value = limpio;
+            }
+        });
+    }
+
+    sanitizarInputNumerico(numeroDpiInput);
+    sanitizarInputNumerico(nitInput);
+    sanitizarInputNumerico(telefonoInput);
 
     // Verificar que los elementos existan
     if (!form || !submitBtn) {
@@ -177,13 +286,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para guardar datos de la sección 1 en localStorage
     function guardarDatosSeccion1() {
+        const numeroDpiValor = numeroDpiInput ? numeroDpiInput.value.replace(/\D/g, '') : '';
+        const nitValor = nitInput ? nitInput.value.replace(/\D/g, '') : '';
+        const telefonoValor = telefonoInput ? telefonoInput.value.replace(/\D/g, '') : '';
         const datos = {
             nombre_completo: document.getElementById('nombre_completo').value,
-            numero_dpi: document.getElementById('numero_dpi').value,
+            numero_dpi: numeroDpiValor,
             fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
-            nit: document.getElementById('nit').value,
+            nit: nitValor,
             email: document.getElementById('email').value,
-            telefono: document.getElementById('telefono').value
+            telefono: telefonoValor
         };
         localStorage.setItem('formulario_datos_seccion1', JSON.stringify(datos));
     }
@@ -195,11 +307,16 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const datos = JSON.parse(datosGuardados);
                 document.getElementById('nombre_completo').value = datos.nombre_completo || '';
-                document.getElementById('numero_dpi').value = datos.numero_dpi || '';
+                document.getElementById('numero_dpi').value = (datos.numero_dpi || '').toString().replace(/\D/g, '');
                 document.getElementById('fecha_nacimiento').value = datos.fecha_nacimiento || '';
-                document.getElementById('nit').value = datos.nit || '';
-                document.getElementById('email').value = datos.email || '';
-                document.getElementById('telefono').value = datos.telefono || '';
+                document.getElementById('nit').value = (datos.nit || '').toString().replace(/\D/g, '');
+                const emailField = document.getElementById('email');
+                if (emailField) {
+                    const emailGuardado = datos.email || emailField.dataset.baseEmail || '';
+                    emailField.value = emailGuardado;
+                    emailField.dataset.baseEmail = emailGuardado.split('/')[0] || emailField.dataset.baseEmail || '';
+                }
+                document.getElementById('telefono').value = (datos.telefono || '').toString().replace(/\D/g, '');
             } catch (e) {
                 console.error('Error al cargar datos guardados:', e);
             }
@@ -289,6 +406,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const authWelcome = document.getElementById('auth-welcome');
     const authLogin = document.getElementById('auth-login');
     const authRegister = document.getElementById('auth-register');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const registerStatus = document.getElementById('registerStatus');
+    const registerStatusText = document.getElementById('registerStatusText');
     const mainContainer = document.querySelector('.container');
     
     // Verificar si hay sesión guardada
@@ -310,29 +431,62 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navButtons) {
             navButtons.style.display = 'none';
         }
+        if (introScreen) {
+            introScreen.style.display = 'none';
+        }
         // Ocultar pantallas de autenticación
         if (authWelcome) authWelcome.style.display = 'none';
         if (authLogin) authLogin.style.display = 'none';
         if (authRegister) authRegister.style.display = 'none';
-        // Mostrar sección de perfil (section-4)
-        const section4 = document.getElementById('section-4');
-        if (section4) {
-            section4.style.display = 'block';
+        // Mostrar pantalla principal o perfil
+        if (homeShowcase) {
+            homeShowcase.style.display = 'flex';
+            if (productDetail) {
+                productDetail.style.display = 'none';
+            }
+            if (catalogList) {
+                catalogList.style.display = 'none';
+            }
+        } else {
+            const section4 = document.getElementById('section-4');
+            if (section4) {
+                section4.style.display = 'block';
+            }
+            cargarDatosPerfil();
+            actualizarBotonesNavegacion(4);
         }
-        // Cargar datos del perfil
-        cargarDatosPerfil();
-        // Actualizar botones de navegación para mostrar Config como activo
-        actualizarBotonesNavegacion(4);
     } else {
-        // Si no hay sesión, mostrar pantalla de bienvenida
-        if (authWelcome && mainContainer) {
-            // Ocultar formulario de registro
+        // Si no hay sesión, mostrar la pantalla de introducción como prioridad
+        if (introScreen) {
+            introScreen.style.display = 'flex';
+            if (mainContainer) mainContainer.style.display = 'none';
+            if (authWelcome) authWelcome.style.display = 'none';
+            if (authLogin) authLogin.style.display = 'none';
+            if (authRegister) authRegister.style.display = 'none';
+            const header = document.querySelector('.header');
+            if (header) header.style.display = 'none';
+            const navButtons = document.getElementById('navButtons');
+            if (navButtons) navButtons.style.display = 'none';
+            if (homeShowcase) homeShowcase.style.display = 'none';
+            if (productDetail) productDetail.style.display = 'none';
+            if (catalogList) catalogList.style.display = 'none';
+        } else if (homeShowcase) {
+            if (mainContainer) mainContainer.style.display = 'none';
+            if (authWelcome) authWelcome.style.display = 'none';
+            if (authLogin) authLogin.style.display = 'none';
+            if (authRegister) authRegister.style.display = 'none';
+            const header = document.querySelector('.header');
+            if (header) header.style.display = 'none';
+            const navButtons = document.getElementById('navButtons');
+            if (navButtons) navButtons.style.display = 'none';
+            homeShowcase.style.display = 'flex';
+            if (productDetail) productDetail.style.display = 'none';
+            if (catalogList) catalogList.style.display = 'none';
+        } else if (authWelcome && mainContainer) {
             mainContainer.style.display = 'none';
-            // Mostrar pantalla de bienvenida
             authWelcome.style.display = 'flex';
         } else {
-            // Si no existe la pantalla de auth, mostrar formulario normal
-    cambiarPaso(1);
+            cambiarPaso(1);
         }
     }
 
@@ -427,14 +581,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
+            const numeroDpiLimpio = (numeroDpi || '').toString().replace(/\D/g, '');
+            const nitLimpio = (nit || '').toString().replace(/\D/g, '');
+            const telefonoLimpio = (telefono || '').toString().replace(/\D/g, '');
+
+            if (!numeroDpiLimpio) {
+                mostrarModal('El campo NO. DPI sólo admite números.');
+                const errorValidacion = new Error('DPI inválido');
+                errorValidacion.isValidation = true;
+                throw errorValidacion;
+            }
+
+            if (!nitLimpio) {
+                mostrarModal('El campo NIT sólo admite números.');
+                const errorValidacion = new Error('NIT inválido');
+                errorValidacion.isValidation = true;
+                throw errorValidacion;
+            }
+
             // Crear objeto con todos los datos
             const datos = {
                 nombre_completo: nombreCompleto,
-                numero_dpi: numeroDpi,
+                numero_dpi: numeroDpiLimpio,
                 fecha_nacimiento: fechaNacimiento,
-                nit: nit,
+                nit: nitLimpio,
                 email: email,
-                telefono: telefono,
+                telefono: telefonoLimpio,
                 tipo_documento: tipoDocumento,
                 action: 'add_user',
                 timestamp: new Date().toISOString(),
@@ -442,6 +614,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 nombres_imagenes: nombresImagenes,
                 tipos_imagenes: tiposImagenes
             };
+
+            const motoSeleccionada = (() => {
+                if (ultimaMotoSeleccionada) {
+                    return {
+                        nombre: ultimaMotoSeleccionada.nombre || '',
+                        imagen: ultimaMotoSeleccionada.imagen || ''
+                    };
+                }
+                try {
+                    const guardada = localStorage.getItem('formulario_moto_seleccionada');
+                    return guardada ? JSON.parse(guardada) : null;
+                } catch (error) {
+                    console.error('Error al leer moto seleccionada almacenada:', error);
+                    return null;
+                }
+            })();
+
+            if (motoSeleccionada) {
+                datos.moto_nombre = motoSeleccionada.nombre || '';
+                datos.moto_imagen = motoSeleccionada.imagen || '';
+            }
 
             // Enviar datos usando iframe oculto
             enviarDatosConIframe(datos);
@@ -451,7 +644,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (loadingScreen) {
                 loadingScreen.style.display = 'none';
             }
-            mostrarError('Error al procesar el formulario: ' + error.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Guardar y Continuar';
+            if (error && error.isValidation) {
+                return;
+            }
+            mostrarError('Error al procesar el formulario: ' + (error && error.message ? error.message : 'Error desconocido'));
         }
     });
 
@@ -540,6 +738,64 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Guardar y Continuar';
         };
 
+        formTemp.submit();
+    }
+
+    function enviarRegistroConIframe(datos, onSuccess, onError) {
+        const iframe = document.getElementById('hiddenIframe');
+        if (!iframe) {
+            console.error('Iframe no encontrado');
+            if (typeof onError === 'function') {
+                onError('No se pudo completar el registro.');
+            }
+            return;
+        }
+
+        const formTemp = document.createElement('form');
+        formTemp.method = 'POST';
+        formTemp.action = REGISTER_SCRIPT_URL;
+        formTemp.target = 'hiddenIframe';
+        formTemp.style.display = 'none';
+        formTemp.style.position = 'absolute';
+        formTemp.style.left = '-9999px';
+
+        for (const key in datos) {
+            if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = datos[key];
+                formTemp.appendChild(input);
+            }
+        }
+
+        const limpiar = () => {
+            if (formTemp && formTemp.parentNode) {
+                formTemp.parentNode.removeChild(formTemp);
+            }
+            iframe.onload = null;
+        };
+
+        iframe.onload = function() {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const respuesta = iframeDoc && iframeDoc.body ? (iframeDoc.body.textContent || iframeDoc.body.innerText || '') : '';
+                if (respuesta.includes('✅')) {
+                    if (typeof onSuccess === 'function') onSuccess(respuesta);
+                } else if (respuesta.includes('❌')) {
+                    const mensajeLimpio = respuesta.replace(/❌/g, '').trim();
+                    if (typeof onError === 'function') onError(mensajeLimpio || 'No fue posible registrar la cuenta.');
+                } else {
+                    if (typeof onSuccess === 'function') onSuccess(respuesta);
+                }
+            } catch (error) {
+                if (typeof onSuccess === 'function') onSuccess();
+            } finally {
+                limpiar();
+            }
+        };
+
+        document.body.appendChild(formTemp);
         formTemp.submit();
     }
 
@@ -747,7 +1003,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Actualizar el campo de email
         if (usuarioEmail) {
-            emailField.value = usuarioEmail;
+            const emailActual = emailField.value;
+            let emailFormateado = usuarioEmail;
+            if (emailActual && emailActual.includes('/')) {
+                const [correoBase, ...resto] = emailActual.split('/');
+                const sufijo = resto.join('/').trim();
+                emailFormateado = `${usuarioEmail}/${sufijo}`;
+            }
+            emailField.value = emailFormateado;
+            emailField.dataset.baseEmail = usuarioEmail;
         }
     }
     
@@ -852,7 +1116,48 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.addEventListener('click', function() {
             mostrarModal('¿Estás seguro de que deseas cerrar sesión?', function() {
                 localStorage.clear();
-                window.location.reload();
+
+                if (form) {
+                    form.reset();
+                }
+
+                const emailField = document.getElementById('email');
+                if (emailField) {
+                    emailField.value = '';
+                    emailField.dataset.baseEmail = '';
+                }
+
+                if (homeShowcase) homeShowcase.style.display = 'none';
+                if (productDetail) productDetail.style.display = 'none';
+                if (catalogList) catalogList.style.display = 'none';
+                if (introScreen) introScreen.style.display = 'none';
+
+                const section4 = document.getElementById('section-4');
+                if (section4) section4.style.display = 'none';
+                const section5 = document.getElementById('section-5');
+                if (section5) section5.style.display = 'none';
+                const section6 = document.getElementById('section-6');
+                if (section6) section6.style.display = 'none';
+
+                const mainContainer = document.querySelector('.container');
+                if (mainContainer) mainContainer.style.display = 'none';
+
+                const header = document.querySelector('.header');
+                if (header) header.style.display = 'none';
+
+                const navButtons = document.getElementById('navButtons');
+                if (navButtons) navButtons.style.display = 'none';
+
+                if (authWelcome) authWelcome.style.display = 'none';
+                if (authRegister) authRegister.style.display = 'none';
+
+                if (authLogin) {
+                    authLogin.style.display = 'flex';
+                } else if (authWelcome) {
+                    authWelcome.style.display = 'flex';
+                }
+
+                currentStep = 1;
             });
         });
     }
@@ -1483,7 +1788,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Crear formulario temporal para eliminar el usuario
                     const formTemp = document.createElement('form');
                     formTemp.method = 'POST';
-                    formTemp.action = 'https://script.google.com/macros/s/AKfycbw-jI6oMlKNmteiK3XMiYNrzoqSUkYA7wtEuKbirRmTrZCDZXCuLH9JjxTSXF2GowivQg/exec';
+                    formTemp.action = REGISTER_SCRIPT_URL;
                     formTemp.target = 'hiddenIframe';
                     formTemp.style.display = 'none';
                     formTemp.style.position = 'absolute';
@@ -1542,6 +1847,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (authWelcome) authWelcome.style.display = 'none';
         if (authLogin) authLogin.style.display = 'none';
         if (authRegister) authRegister.style.display = 'none';
+        if (introScreen) introScreen.style.display = 'none';
+        if (homeShowcase) homeShowcase.style.display = 'none';
+        if (productDetail) productDetail.style.display = 'none';
+        if (catalogList) catalogList.style.display = 'none';
+        if (homeShowcase) homeShowcase.style.display = 'none';
+        if (productDetail) productDetail.style.display = 'none';
+        if (catalogList) catalogList.style.display = 'none';
         
         // Ocultar contenedor principal
         const mainContainer = document.querySelector('.container');
@@ -1562,6 +1874,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (authWelcome) authWelcome.style.display = 'none';
         if (authLogin) authLogin.style.display = 'none';
         if (authRegister) authRegister.style.display = 'none';
+        if (introScreen) introScreen.style.display = 'none';
+        if (homeShowcase) homeShowcase.style.display = 'none';
         
         // Mostrar contenedor principal
         const mainContainer = document.querySelector('.container');
@@ -1597,343 +1911,666 @@ document.addEventListener('DOMContentLoaded', function() {
             mostrarAuthScreen('login');
         });
     }
-    
-    // Manejar envío de formularios de auth
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    
+
+    function manejarLoginExitoso(email, esAdmin) {
+        const usuario = {
+            email,
+            esAdmin
+        };
+        localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+
+        try {
+            const datosGuardados = localStorage.getItem('formulario_datos_seccion1');
+            const datos = datosGuardados ? JSON.parse(datosGuardados) : {};
+            datos.email = email;
+            localStorage.setItem('formulario_datos_seccion1', JSON.stringify(datos));
+        } catch (error) {
+            console.error('Error guardando el email tras login:', error);
+        }
+
+        cargarEmailUsuario();
+        cargarDatosPerfil();
+        mostrarVistaPrincipalTrasLogin();
+    }
+
+    function mostrarVistaPrincipalTrasLogin() {
+        if (introScreen) introScreen.style.display = 'none';
+        if (authWelcome) authWelcome.style.display = 'none';
+        if (authLogin) authLogin.style.display = 'none';
+        if (authRegister) authRegister.style.display = 'none';
+        if (productDetail) productDetail.style.display = 'none';
+        if (catalogList) catalogList.style.display = 'none';
+
+        const header = document.querySelector('.header');
+        if (header) header.style.display = 'block';
+
+        const navButtons = document.getElementById('navButtons');
+        if (navButtons) navButtons.style.display = 'flex';
+
+        if (homeShowcase) {
+            homeShowcase.style.display = 'flex';
+        } else if (mainContainer) {
+            mainContainer.style.display = 'block';
+            cambiarPaso(1);
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            
-            if (!email || !password) {
-                mostrarModal('Por favor completa todos los campos requeridos');
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const emailInput = loginForm.querySelector('input[type="email"]');
+            const passwordInput = loginForm.querySelector('input[type="password"]');
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+            const emailValor = emailInput ? emailInput.value.trim() : '';
+            const passwordValor = passwordInput ? passwordInput.value.trim() : '';
+
+            if (!emailValor || !passwordValor) {
+                mostrarModal('Por favor ingresa tu correo y contraseña para continuar.');
                 return;
             }
-            
-            // Mostrar mensaje de carga
-            const loginStatus = document.getElementById('loginStatus');
-            const loginStatusText = document.getElementById('loginStatusText');
-            const loginFormElements = this.querySelectorAll('input, button');
-            
-            if (loginFormElements) {
-                loginFormElements.forEach(el => {
-                    el.style.opacity = '0.5';
-                    el.disabled = true;
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.dataset.originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Validando...';
+            }
+
+            try {
+                const response = await fetch(LOGIN_SCRIPT_URL);
+                if (!response.ok) {
+                    throw new Error(`Error de red (${response.status})`);
+                }
+                const payload = await response.json();
+                if (!payload || payload.success !== true || !Array.isArray(payload.data)) {
+                    throw new Error('Respuesta inesperada al validar credenciales');
+                }
+
+                const registro = payload.data.find(item => {
+                    const emailItem = (item.Email || '').toString().trim().toLowerCase();
+                    const passwordItem = (item.Contraseña || '').toString().trim();
+                    const passwordBase = passwordItem.replace(/\/admin/gi, '').trim();
+                    return emailItem === emailValor.toLowerCase() && passwordBase === passwordValor;
                 });
+
+                if (!registro) {
+                    mostrarModal('Credenciales incorrectas. Verifica tu correo y contraseña.');
+                    return;
+                }
+
+                const passwordItem = (registro.Contraseña || '').toString().trim();
+                const esAdmin = /\/admin/i.test(passwordItem);
+                const emailNormalizado = (registro.Email || '').toString().trim();
+
+                manejarLoginExitoso(emailNormalizado, esAdmin);
+            } catch (error) {
+                console.error('Error durante el login:', error);
+                mostrarModal('No fue posible validar tus credenciales. Inténtalo nuevamente en unos minutos.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitBtn.dataset.originalText || 'Iniciar Sesión';
+                }
             }
-            
-            // Crear mensaje de estado si no existe
-            let statusDiv = document.getElementById('loginStatus');
-            if (!statusDiv) {
-                statusDiv = document.createElement('div');
-                statusDiv.id = 'loginStatus';
-                statusDiv.className = 'register-status';
-                statusDiv.innerHTML = '<div class="register-spinner"></div><p class="register-status-text" id="loginStatusText">Verificando credenciales...</p>';
-                loginForm.parentNode.insertBefore(statusDiv, loginForm.nextSibling);
-            }
-            
-            statusDiv.style.display = 'flex';
-            statusDiv.classList.remove('success');
-            const statusText = document.getElementById('loginStatusText');
-            if (statusText) {
-                statusText.textContent = 'Verificando credenciales...';
-            }
-            
-            // Hacer petición al script de Google Apps Script
-            const LOGIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU4ZkKAUYLRG6TdJAxwGk921LcHnBiU2pzxa_Yk6g3h_pCMqUZEjuwXtq3fDChr2oe/exec';
-            
-            fetch(LOGIN_SCRIPT_URL)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.data) {
-                        // Buscar usuario con email y contraseña coincidentes
-                        // La contraseña en el sheet puede ser "12345" o "12345/admin"
-                        // El usuario ingresa solo "12345" (sin /admin)
-                        const usuarioEncontrado = data.data.find(user => {
-                            const userEmail = (user.Email || '').toString().trim().toLowerCase();
-                            const userPassword = (user.Contraseña || '').toString().trim();
-                            
-                            // Quitar "/admin" del sheet para comparar solo la contraseña base
-                            const passwordBaseEnSheet = userPassword.endsWith('/admin') 
-                                ? userPassword.replace('/admin', '') 
-                                : userPassword;
-                            
-                            // Comparar email y contraseña base (sin /admin)
-                            return userEmail === email.toLowerCase() && passwordBaseEnSheet === password;
-                        });
-                        
-                        if (usuarioEncontrado) {
-                            // Verificar si la contraseña almacenada en el sheet termina con "/admin"
-                            const contraseñaEnSheet = (usuarioEncontrado.Contraseña || '').toString().trim();
-                            const esAdmin = contraseñaEnSheet.endsWith('/admin');
-                            
-                            // Credenciales correctas
-                            if (statusDiv) {
-                                statusDiv.classList.add('success');
-                                if (statusText) {
-                                    statusText.textContent = 'Inicio de sesión exitoso';
-                                }
-                            }
-                            
-                            // Guardar datos del usuario en localStorage
-                            localStorage.setItem('usuario_logueado', JSON.stringify({
-                                email: usuarioEncontrado.Email,
-                                contraseña: contraseñaEnSheet,
-                                esAdmin: esAdmin
-                            }));
-                            
-                            // Verificar si es admin
-                            verificarAdmin();
-                            
-                            // Después de 1 segundo, entrar automáticamente al perfil
-                            setTimeout(function() {
-                                // Ocultar pantalla de login
-                                if (authLogin) {
-                                    authLogin.style.display = 'none';
-                                }
-                                // Ocultar contenedor principal
-                                const mainContainer = document.querySelector('.container');
-                                if (mainContainer) {
-                                    mainContainer.style.display = 'none';
-                                }
-                                const header = document.querySelector('.header');
-                                if (header) {
-                                    header.style.display = 'none';
-                                }
-                                const navButtons = document.getElementById('navButtons');
-                                if (navButtons) {
-                                    navButtons.style.display = 'none';
-                                }
-                                // Mostrar sección de perfil
-                                const section4 = document.getElementById('section-4');
-                                if (section4) {
-                                    section4.style.display = 'block';
-                                }
-                                // Cargar datos del perfil
-                                cargarDatosPerfil();
-                                // Actualizar botones de navegación para mostrar Config como activo
-                                actualizarBotonesNavegacion(4);
-                            }, 1000);
-                        } else {
-                            // Credenciales incorrectas
-                            if (statusDiv) {
-                                statusDiv.style.display = 'none';
-                            }
-                            if (loginFormElements) {
-                                loginFormElements.forEach(el => {
-                                    el.style.opacity = '1';
-                                    el.disabled = false;
-                                });
-                            }
-                            mostrarModal('Email o contraseña incorrectos');
-                        }
-                    } else {
-                        // Error al obtener datos
-                        if (statusDiv) {
-                            statusDiv.style.display = 'none';
-                        }
-                        if (loginFormElements) {
-                            loginFormElements.forEach(el => {
-                                el.style.opacity = '1';
-                                el.disabled = false;
-                            });
-                        }
-                        mostrarModal('Error al verificar credenciales. Intenta nuevamente.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    if (statusDiv) {
-                        statusDiv.style.display = 'none';
-                    }
-                    if (loginFormElements) {
-                        loginFormElements.forEach(el => {
-                            el.style.opacity = '1';
-                            el.disabled = false;
-                        });
-                    }
-                    mostrarModal('Error de conexión. Intenta nuevamente.');
-                });
         });
     }
-    
+
     if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            const email = document.getElementById('registerEmail').value;
-            
-            if (password !== confirmPassword) {
-                mostrarModal('Las contraseñas no coinciden');
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const emailInput = registerForm.querySelector('input[name="Email"]');
+            const passwordInput = registerForm.querySelector('input[name="Contraseña"]');
+            const confirmInput = document.getElementById('registerConfirmPassword');
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+
+            const emailValor = emailInput ? emailInput.value.trim() : '';
+            const passwordValor = passwordInput ? passwordInput.value.trim() : '';
+            const confirmValor = confirmInput ? confirmInput.value.trim() : '';
+
+            if (!emailValor || !passwordValor || !confirmValor) {
+                mostrarModal('Completa todos los campos para registrarte.');
                 return;
             }
-            
-            if (!email || !password) {
-                mostrarModal('Por favor completa todos los campos requeridos');
+
+            if (passwordValor !== confirmValor) {
+                mostrarModal('Las contraseñas no coinciden.');
                 return;
             }
-            
-            // Ocultar formulario y mostrar mensaje de estado
-            const registerStatus = document.getElementById('registerStatus');
-            const registerStatusText = document.getElementById('registerStatusText');
-            const registerFormElements = this.querySelectorAll('input, button');
-            const formElement = this;
-            
-            if (registerFormElements) {
-                registerFormElements.forEach(el => {
-                    el.style.opacity = '0.5';
-                    el.disabled = true;
-                });
-            }
-            
+
             if (registerStatus) {
                 registerStatus.style.display = 'flex';
                 registerStatus.classList.remove('success');
-                if (registerStatusText) {
-                    registerStatusText.textContent = 'Creando cuenta...';
-                }
             }
-            
-            // Asegurarse de que el iframe existe
-            let iframe = document.getElementById('hiddenIframe');
-            if (!iframe) {
-                // Crear iframe si no existe
-                iframe = document.createElement('iframe');
-                iframe.id = 'hiddenIframe';
-                iframe.name = 'hiddenIframe';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
+            if (registerStatusText) {
+                registerStatusText.textContent = 'Creando cuenta...';
             }
-            
-            // Crear formulario temporal para enviar los datos usando iframe
-            const formTemp = document.createElement('form');
-            formTemp.method = 'POST';
-            formTemp.action = 'https://script.google.com/macros/s/AKfycbw-jI6oMlKNmteiK3XMiYNrzoqSUkYA7wtEuKbirRmTrZCDZXCuLH9JjxTSXF2GowivQg/exec';
-            formTemp.target = 'hiddenIframe';
-            formTemp.style.display = 'none';
-            formTemp.style.position = 'absolute';
-            formTemp.style.left = '-9999px';
-            
-            // Agregar campos al formulario temporal
-            const inputPassword = document.createElement('input');
-            inputPassword.type = 'hidden';
-            inputPassword.name = 'Contraseña';
-            inputPassword.value = password;
-            formTemp.appendChild(inputPassword);
-            
-            const inputEmail = document.createElement('input');
-            inputEmail.type = 'hidden';
-            inputEmail.name = 'Email';
-            inputEmail.value = email;
-            formTemp.appendChild(inputEmail);
-            
-            // Agregar formulario al body
-            document.body.appendChild(formTemp);
-            
-            // Enviar formulario (se enviará al iframe oculto)
-            formTemp.submit();
-            
-            // Remover formulario temporal después de enviar
-            setTimeout(function() {
-                if (formTemp && formTemp.parentNode) {
-                    formTemp.parentNode.removeChild(formTemp);
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.dataset.originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Registrando...';
+            }
+
+            const datosRegistro = {
+                action: 'register_user',
+                Email: emailValor,
+                Contraseña: passwordValor
+            };
+
+            enviarRegistroConIframe(datosRegistro, function() {
+                if (registerStatus) registerStatus.classList.add('success');
+                if (registerStatusText) registerStatusText.textContent = 'Cuenta creada correctamente. Iniciando sesión...';
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitBtn.dataset.originalText || 'Registrarse';
                 }
-            }, 1000);
-            
-            // Asumir éxito después de un tiempo (el formulario se envía correctamente al iframe)
-            // Necesitamos verificar en el sheet si la contraseña tiene "/admin"
-            setTimeout(function() {
-                // Hacer petición para verificar si el usuario es admin
-                const LOGIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU4ZkKAUYLRG6TdJAxwGk921LcHnBiU2pzxa_Yk6g3h_pCMqUZEjuwXtq3fDChr2oe/exec';
-                
-                fetch(LOGIN_SCRIPT_URL)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success && data.data) {
-                            // Buscar el usuario recién registrado
-                            const usuarioEncontrado = data.data.find(user => {
-                                const userEmail = (user.Email || '').toString().trim().toLowerCase();
-                                return userEmail === email.toLowerCase();
-                            });
-                            
-                            let esAdmin = false;
-                            if (usuarioEncontrado) {
-                                const contraseñaEnSheet = (usuarioEncontrado.Contraseña || '').toString().trim();
-                                esAdmin = contraseñaEnSheet.endsWith('/admin');
-                            }
-                            
-                            // Guardar datos del usuario en localStorage
-                            localStorage.setItem('usuario_logueado', JSON.stringify({
-                                email: email,
-                                contraseña: password,
-                                esAdmin: esAdmin
-                            }));
-                            
-                            // Verificar si es admin
-                            verificarAdmin();
-                        } else {
-                            // Si no se puede verificar, guardar sin admin
-                            localStorage.setItem('usuario_logueado', JSON.stringify({
-                                email: email,
-                                contraseña: password,
-                                esAdmin: false
-                            }));
-                            verificarAdmin();
-                        }
-                    })
-                    .catch(error => {
-                        // En caso de error, guardar sin admin
-                        localStorage.setItem('usuario_logueado', JSON.stringify({
-                            email: email,
-                            contraseña: password,
-                            esAdmin: false
-                        }));
-                        verificarAdmin();
-                    });
-                
-                // Mostrar éxito
-                if (registerStatus) {
-                    registerStatus.classList.add('success');
-                    if (registerStatusText) {
-                        registerStatusText.textContent = 'Cuenta creada con éxito';
-                    }
-                }
-                
-                // Después de 1.5 segundos, entrar automáticamente al perfil
                 setTimeout(function() {
-                    // Ocultar pantalla de registro
-                    if (authRegister) {
-                        authRegister.style.display = 'none';
-                    }
-                    // Ocultar contenedor principal
-                    const mainContainer = document.querySelector('.container');
-                    if (mainContainer) {
-                        mainContainer.style.display = 'none';
-                    }
-                    const header = document.querySelector('.header');
-                    if (header) {
-                        header.style.display = 'none';
-                    }
-                    const navButtons = document.getElementById('navButtons');
-                    if (navButtons) {
-                        navButtons.style.display = 'none';
-                    }
-                    // Mostrar sección de perfil
-                    const section4 = document.getElementById('section-4');
-                    if (section4) {
-                        section4.style.display = 'block';
-                    }
-                    // Cargar datos del perfil
-                    cargarDatosPerfil();
-                    // Actualizar botones de navegación para mostrar Config como activo
-                    actualizarBotonesNavegacion(4);
-                }, 1500);
-            }, 1000);
+                    if (registerStatus) registerStatus.style.display = 'none';
+                    const esAdmin = /\/admin/i.test(passwordValor);
+                    const emailNormalizado = emailValor.trim();
+                    manejarLoginExitoso(emailNormalizado, esAdmin);
+                    registerForm.reset();
+                }, 800);
+            }, function(mensajeError) {
+                if (registerStatus) registerStatus.style.display = 'none';
+                if (registerStatus) registerStatus.classList.remove('success');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitBtn.dataset.originalText || 'Registrarse';
+                }
+                mostrarModal(mensajeError || 'No fue posible registrar la cuenta. Inténtalo más tarde.');
+            });
         });
     }
+
+    if (introGetStartedBtn) {
+        introGetStartedBtn.addEventListener('click', function() {
+            if (introScreen) {
+                introScreen.style.display = 'none';
+            }
+            if (productDetail) {
+                productDetail.style.display = 'none';
+            }
+            if (catalogList) {
+                catalogList.style.display = 'none';
+            }
+            if (homeShowcase) {
+                homeShowcase.style.display = 'none';
+            }
+            if (authWelcome) {
+                authWelcome.style.display = 'flex';
+            } else if (mainContainer) {
+                mainContainer.style.display = 'block';
+                cambiarPaso(1);
+            }
+        });
+    }
+
+    function extraerNumero(texto) {
+        if (!texto) return 0;
+        const limpio = texto.toString().replace(/[^\d]/g, '');
+        return limpio ? Number(limpio) : 0;
+    }
+
+    function parseLineaInfo(lineaCruda) {
+        const texto = (lineaCruda || '').toString().trim();
+        if (!texto) {
+            return { texto: '', image: null };
+        }
+        const httpIndex = texto.indexOf('http');
+        if (httpIndex === -1) {
+            return { texto, image: null };
+        }
+        const label = texto.slice(0, httpIndex).replace(/\/+$/g, '').trim();
+        const image = texto.slice(httpIndex).trim();
+        return {
+            texto: label || texto,
+            image: image || null
+        };
+    }
+
+    function limpiarUrlImagen(valor) {
+        if (!valor) return '';
+        return valor.toString().replace(/\[\/?img\]/gi, '').trim();
+    }
+
+    function normalizarMoto(item, index, prefix = 'api') {
+        const marca = item?.marca || '';
+        const lineaInfo = parseLineaInfo(item?.['línea'] || item?.linea || '');
+        const linea = lineaInfo.texto;
+        const nombre = [marca, linea].filter(Boolean).join(' ').trim() || 'Motocicleta';
+        const precioTexto = item?.contado || 'Precio a consultar';
+        const precioNumero = extraerNumero(precioTexto);
+        const rating = item?.rating || (4 + Math.random()).toFixed(1);
+        const descripcionPartes = [nombre];
+        if (item?.promoción) descripcionPartes.push(item.promoción);
+        const descripcion = descripcionPartes.filter(Boolean).join('. ');
+        return {
+            id: item?.id || `${prefix}-${index}`,
+            marca,
+            linea,
+            nombre,
+            precioTexto,
+            precioNumero,
+            rating,
+            descripcion: descripcion || 'Consulta condiciones con nuestros asesores.',
+            cuotas: item?.cuotas || 'Sin cuotas disponibles',
+            gasto: item?.gasto_administrativo || 'Sin gasto administrativo',
+            promocion: item?.promoción || 'Sin promoción vigente',
+            imagen: limpiarUrlImagen(item?.imagen) || DEFAULT_BIKE_IMAGE,
+            lineaImagen: limpiarUrlImagen(lineaInfo.image)
+        };
+    }
+
+    function obtenerDatosFuente() {
+        return motosData.length ? motosData : FALLBACK_MOTOS;
+    }
+
+    function seleccionarAleatorias(array, cantidad) {
+        const copia = array.slice();
+        for (let i = copia.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copia[i], copia[j]] = [copia[j], copia[i]];
+        }
+        return copia.slice(0, cantidad);
+    }
+
+    function obtenerLineaBase(linea) {
+        const texto = (linea || '').toString().trim();
+        if (!texto) return '';
+        const primerToken = texto.split(/\s+/)[0];
+        return primerToken || '';
+    }
+
+    function formatearEtiquetaLinea(linea) {
+        const base = obtenerLineaBase(linea);
+        if (!base) return '';
+        if (base === base.toUpperCase()) {
+            return base;
+        }
+        return base.charAt(0).toUpperCase() + base.slice(1).toLowerCase();
+    }
+
+    function normalizarLineaTexto(linea) {
+        return obtenerLineaBase(linea).toLowerCase();
+    }
+
+    function formatearTituloCard(nombre) {
+        if (!nombre) return '';
+        return nombre.replace(/\s*\(/, '<br>(');
+    }
+
+    function renderBrandButtons() {
+        if (!homeShowcaseBrands) return;
+        const fuente = obtenerDatosFuente();
+        const lineasMap = new Map();
+
+        fuente.forEach(moto => {
+            const lineaKey = normalizarLineaTexto(moto.linea || moto.nombre);
+            if (!lineaKey) return;
+            const etiqueta = formatearEtiquetaLinea(moto.linea || moto.nombre) || 'Línea';
+            const imagen = moto?.lineaImagen || null;
+            const existente = lineasMap.get(lineaKey);
+            if (existente) {
+                if (!existente.image && imagen) {
+                    existente.image = imagen;
+                }
+            } else {
+                lineasMap.set(lineaKey, {
+                    label: etiqueta,
+                    image: imagen
+                });
+            }
+        });
+
+        if (lineaSeleccionada && !lineasMap.has(lineaSeleccionada)) {
+            lineaSeleccionada = null;
+        }
+
+        homeShowcaseBrands.innerHTML = '';
+
+        const fragment = document.createDocumentFragment();
+
+        const crearBoton = (key, info) => {
+            const label = info?.label || 'Línea';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'home-showcase__brand';
+            if (key === lineaSeleccionada || (!key && lineaSeleccionada === null)) {
+                button.classList.add('active');
+            }
+
+            const imagenDisponible = info?.image || (key === 'apache' ? APACHE_BRAND_IMAGE : null);
+            if (imagenDisponible && key !== null) {
+                const img = document.createElement('img');
+                img.src = imagenDisponible;
+                img.alt = label;
+                img.loading = 'lazy';
+                img.className = 'home-showcase__brand-icon';
+                button.appendChild(img);
+            } else {
+                button.classList.add('home-showcase__brand--text');
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'home-showcase__brand-text';
+                labelSpan.textContent = label;
+                button.appendChild(labelSpan);
+            }
+
+            button.addEventListener('click', () => {
+                if (key === null) {
+                    lineaSeleccionada = null;
+                } else if (lineaSeleccionada === key) {
+                    lineaSeleccionada = null;
+                } else {
+                    lineaSeleccionada = key;
+                }
+                renderBrandButtons();
+                renderHomeCards();
+            });
+
+            fragment.appendChild(button);
+        };
+
+        crearBoton(null, { label: 'Popular' });
+
+        if (lineasMap.size) {
+            const lineasOrdenadas = Array.from(lineasMap.entries()).sort((a, b) =>
+                (a[1].label || '').localeCompare(b[1].label || '', 'es', { sensitivity: 'base' })
+            );
+            lineasOrdenadas.forEach(([key, info]) => crearBoton(key, info));
+        }
+
+        homeShowcaseBrands.appendChild(fragment);
+    }
+
+    function mostrarDetalleMoto(moto, origen = 'home') {
+        if (!productDetail) return;
+        origenDetalle = origen;
+        ultimaMotoSeleccionada = moto;
+        if (homeShowcase) homeShowcase.style.display = 'none';
+        if (catalogList) catalogList.style.display = 'none';
+        if (introScreen) introScreen.style.display = 'none';
+
+        if (productDetailImage) productDetailImage.src = moto.imagen;
+        if (productDetailName) productDetailName.textContent = moto.nombre;
+        if (productDetailRating) productDetailRating.textContent = `⭐ ${moto.rating}`;
+        if (productDetailDescription) {
+            productDetailDescription.textContent = moto.descripcion.replace(/-?\s*Placas\s+Gratis\s*-?/gi, '').replace(/\s{2,}/g, ' ').trim();
+        }
+        if (productDetailCapacity) productDetailCapacity.textContent = moto.cuotas;
+        if (productDetailSpeed) productDetailSpeed.textContent = moto.gasto;
+        if (productDetailPower) productDetailPower.textContent = 'Placas Gratis';
+        if (productDetailPrice) productDetailPrice.textContent = moto.precioTexto;
+
+        productDetail.style.display = 'flex';
+
+        const detalleImagenWrapper = productDetailImage?.closest('.product-detail__image');
+        if (detalleImagenWrapper) {
+            detalleImagenWrapper.style.transform = 'translateY(-30%)';
+        }
+
+        const detalleCard = document.querySelector('.product-detail__card');
+        if (detalleCard) {
+            detalleCard.style.transform = 'translateY(-30%)';
+        }
+    }
+
+    function renderHomeCards() {
+        const container = document.querySelector('.home-showcase__cards');
+        if (!container) return;
+        const fuente = obtenerDatosFuente();
+        const datosFiltrados = lineaSeleccionada
+            ? fuente.filter(moto => normalizarLineaTexto(moto.linea || moto.nombre) === lineaSeleccionada)
+            : fuente;
+        const datosParaMostrar = lineaSeleccionada ? datosFiltrados : seleccionarAleatorias(fuente, Math.min(4, fuente.length));
+
+        container.innerHTML = '';
+        const debeSerCompacto = !datosParaMostrar.length || datosParaMostrar.length <= 2;
+        container.classList.toggle('home-showcase__cards--compact', debeSerCompacto);
+        container.classList.toggle('home-showcase__cards--recommended', !lineaSeleccionada);
+
+        if (!datosParaMostrar.length) {
+            const mensaje = document.createElement('p');
+            mensaje.className = 'home-showcase__empty';
+            mensaje.textContent = 'No hay motos disponibles para esta línea.';
+            container.appendChild(mensaje);
+            return;
+        }
+
+        datosParaMostrar.forEach(moto => {
+            const card = document.createElement('article');
+            card.className = 'home-showcase__card home-showcase__card--featured';
+            card.innerHTML = `
+                <button type="button" class="home-showcase__card-fav" aria-label="Agregar a favoritos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <path d="M12 21s-6.5-4.35-9-7.92C1.86 10.65 2.07 7.46 4.4 5.4c2.33-2.05 5.47-1.53 7.6.92 2.13-2.45 5.27-2.97 7.6-.92 2.33 2.06 2.54 5.25 1.4 7.68C18.5 16.65 12 21 12 21z"></path>
+                    </svg>
+                </button>
+                <div class="home-showcase__card-image">
+                    <img src="${moto.imagen}" alt="${moto.nombre}" loading="lazy">
+                </div>
+                <div class="home-showcase__card-body">
+                    <h4>${formatearTituloCard(moto.nombre)}</h4>
+                    <div class="home-showcase__card-meta">
+                        <span class="home-showcase__card-price">${moto.precioTexto}</span>
+                        <span class="home-showcase__card-rating">${moto.rating}</span>
+                    </div>
+                </div>
+            `;
+            const favBtn = card.querySelector('.home-showcase__card-fav');
+            if (favBtn) {
+                favBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    favBtn.classList.toggle('active');
+                });
+            }
+            card.addEventListener('click', () => mostrarDetalleMoto(moto, 'home'));
+            container.appendChild(card);
+        });
+    }
+
+    function renderCatalogCards() {
+        if (!catalogListItems) return;
+        const datos = obtenerDatosFuente();
+        catalogListItems.innerHTML = '';
+        datos.forEach(moto => {
+            const item = document.createElement('article');
+            item.className = 'catalog-list__item';
+            item.innerHTML = `
+                <img src="${moto.imagen}" alt="${moto.nombre}" class="catalog-list__item-img">
+                <div class="catalog-list__item-body">
+                    <div>
+                        <h4 class="catalog-list__item-title">${formatearTituloCard(moto.nombre)}</h4>
+                        <div class="catalog-list__item-rating">⭐ ${moto.rating}</div>
+                    </div>
+                    <div class="catalog-list__item-btns">
+                        <div class="catalog-list__item-price">${moto.precioTexto}</div>
+                        <button type="button" class="catalog-list__buy-btn">Comprar</button>
+                    </div>
+                </div>
+            `;
+            item.addEventListener('click', () => mostrarDetalleMoto(moto, 'catalog'));
+            catalogListItems.appendChild(item);
+        });
+    }
+
+    function mostrarCatalogo() {
+        renderCatalogCards();
+        if (catalogList) catalogList.style.display = 'flex';
+        if (homeShowcase) homeShowcase.style.display = 'none';
+        if (productDetail) productDetail.style.display = 'none';
+        if (introScreen) introScreen.style.display = 'none';
+    }
+
+    async function cargarMotosDesdeAPI() {
+        try {
+            const response = await fetch(MOTOS_API_URL);
+            const data = await response.json();
+            if (data && data.success && Array.isArray(data.data)) {
+                motosData = data.data.map((item, index) => normalizarMoto(item, index, 'api'));
+                renderBrandButtons();
+                renderHomeCards();
+                renderCatalogCards();
+            }
+        } catch (error) {
+            console.error('Error cargando motos desde API:', error);
+        }
+    }
+
+    renderBrandButtons();
+    renderHomeCards();
+    renderCatalogCards();
+    cargarMotosDesdeAPI();
+
+    if (productDetailBackBtn) {
+        productDetailBackBtn.addEventListener('click', function() {
+            if (productDetail) {
+                productDetail.style.display = 'none';
+            }
+            if (origenDetalle === 'catalog' && catalogList) {
+                catalogList.style.display = 'flex';
+            } else if (homeShowcase) {
+                renderHomeCards();
+                homeShowcase.style.display = 'flex';
+            }
+            origenDetalle = 'home';
+        });
+    }
+
+    if (productDetailBuyBtn) {
+        productDetailBuyBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const emailField = document.getElementById('email');
+            const motoNombre = productDetailName ? productDetailName.textContent.trim() : '';
+            const motoImagen = ultimaMotoSeleccionada?.imagen || (productDetailImage ? productDetailImage.src : '');
+            if (emailField) {
+                const baseEmail = emailField.dataset.baseEmail || emailField.value.split('/')[0].trim();
+                emailField.dataset.baseEmail = baseEmail;
+                if (motoNombre) {
+                    const nuevoEmail = `${baseEmail}/${motoNombre}`;
+                    emailField.value = nuevoEmail;
+                    emailField.dispatchEvent(new Event('input', { bubbles: true }));
+                    emailField.dispatchEvent(new Event('change', { bubbles: true }));
+
+                    try {
+                        const datosGuardados = localStorage.getItem('formulario_datos_seccion1');
+                        const datos = datosGuardados ? JSON.parse(datosGuardados) : {};
+                        datos.email = nuevoEmail;
+                        localStorage.setItem('formulario_datos_seccion1', JSON.stringify(datos));
+                    } catch (e) {
+                        console.error('Error guardando email con moto:', e);
+                    }
+                }
+            }
+
+            try {
+                const payloadMoto = {
+                    nombre: motoNombre,
+                    imagen: motoImagen,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('formulario_moto_seleccionada', JSON.stringify(payloadMoto));
+            } catch (error) {
+                console.error('Error guardando moto seleccionada:', error);
+            }
+
+            if (productDetail) productDetail.style.display = 'none';
+            if (homeShowcase) homeShowcase.style.display = 'none';
+            if (catalogList) catalogList.style.display = 'none';
+            if (introScreen) introScreen.style.display = 'none';
+
+            const section4 = document.getElementById('section-4');
+            if (section4) section4.style.display = 'none';
+
+            const mainContainer = document.querySelector('.container');
+            if (mainContainer) mainContainer.style.display = 'block';
+
+            const header = document.querySelector('.header');
+            if (header) header.style.display = 'block';
+
+            const navButtons = document.getElementById('navButtons');
+            if (navButtons) navButtons.style.display = 'flex';
+
+            cambiarPaso(1);
+        });
+    }
+
+    if (catalogListBackBtn) {
+        catalogListBackBtn.addEventListener('click', function() {
+            if (catalogList) catalogList.style.display = 'none';
+            renderHomeCards();
+            if (homeShowcase) homeShowcase.style.display = 'flex';
+            origenDetalle = 'home';
+        });
+    }
+
+    if (catalogListHomeBtn) {
+        catalogListHomeBtn.addEventListener('click', function() {
+            if (catalogList) catalogList.style.display = 'none';
+            if (productDetail) productDetail.style.display = 'none';
+            renderHomeCards();
+            if (homeShowcase) homeShowcase.style.display = 'flex';
+            origenDetalle = 'home';
+        });
+    }
+
+    if (catalogListProfileBtn) {
+        catalogListProfileBtn.addEventListener('click', function() {
+            if (catalogList) catalogList.style.display = 'none';
+            if (productDetail) productDetail.style.display = 'none';
+            const section4 = document.getElementById('section-4');
+            if (section4) section4.style.display = 'block';
+            if (homeShowcase) homeShowcase.style.display = 'none';
+            if (introScreen) introScreen.style.display = 'none';
+            const header = document.querySelector('.header');
+            const navButtons = document.getElementById('navButtons');
+            if (header) header.style.display = 'none';
+            if (navButtons) navButtons.style.display = 'none';
+            cargarDatosPerfil();
+            actualizarBotonesNavegacion(4);
+            origenDetalle = 'home';
+        });
+    }
+
+    if (homeStartBtn) {
+        homeStartBtn.addEventListener('click', mostrarCatalogo);
+    }
+
+    if (homeProfileBtn) {
+        homeProfileBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (productDetail) productDetail.style.display = 'none';
+            if (catalogList) catalogList.style.display = 'none';
+            if (homeShowcase) homeShowcase.style.display = 'none';
+            if (introScreen) introScreen.style.display = 'none';
+            const section4 = document.getElementById('section-4');
+            if (section4) {
+                section4.style.display = 'block';
+                cargarDatosPerfil();
+            }
+            const header = document.querySelector('.header');
+            if (header) header.style.display = 'none';
+            const navButtons = document.getElementById('navButtons');
+            if (navButtons) navButtons.style.display = 'none';
+            actualizarBotonesNavegacion(4);
+        });
+    }
+
+    menuHomeShowcase.addEventListener('click', function() {
+        const section4 = document.getElementById('section-4');
+        if (section4) {
+            section4.style.display = 'none';
+        }
+        if (homeShowcase) {
+            renderHomeCards();
+            homeShowcase.style.display = 'flex';
+        }
+        if (productDetail) {
+            productDetail.style.display = 'none';
+        }
+    });
 });
 

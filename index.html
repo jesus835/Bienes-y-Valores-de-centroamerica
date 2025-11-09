@@ -4,25 +4,244 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienes y Valores de Centroamérica Financiera - Gestión Financiera</title>
-    <meta name="description" content="Solicita tu Crédito Rápido, Confiable y Seguro. Acceso inmediato a servicios financieros.">
+    <meta name="description" content="Encuentra la moto ideal y obtén tu crédito inmediato de forma rápida, confiable y segura.">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bienesyvalorescentroamerica.netlify.app/">
     <meta property="og:title" content="Bienes y Valores de Centroamérica Financiera">
-    <meta property="og:description" content="Solicita tu Crédito Rápido, Confiable y Seguro. Acceso inmediato a servicios financieros.">
+    <meta property="og:description" content="Encuentra la moto ideal y obtén tu crédito inmediato de forma rápida, confiable y segura.">
     <meta property="og:image" content="https://i.imgur.com/al5tjvz.png">
     <meta property="og:site_name" content="Bienes y Valores de Centroamérica Financiera">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Bienes y Valores de Centroamérica Financiera">
-    <meta property="twitter:description" content="Solicita tu Crédito Rápido, Confiable y Seguro. Acceso inmediato a servicios financieros.">
+    <meta property="twitter:description" content="Encuentra la moto ideal y obtén tu crédito inmediato de forma rápida, confiable y segura.">
     <meta property="twitter:image" content="https://i.imgur.com/al5tjvz.png">
     
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Sección de inicio estilo catálogo -->
+    <section class="home-showcase" id="homeShowcase" style="display: none;">
+        <div class="home-showcase__wrapper">
+            <header class="home-showcase__header">
+                <div class="home-showcase__profile">
+                    <img src="https://i.imgur.com/nxFzt7V.png" alt="Avatar" class="home-showcase__avatar" loading="lazy">
+                    <div>
+                        <span class="home-showcase__welcome">Bienvenido a</span>
+                        <h2 class="home-showcase__name">
+                            <img src="https://i.imgur.com/zCQ9iyX.png" alt="Motos Express" style="width: 120px; height: auto; object-fit: contain;">
+                        </h2>
+                    </div>
+                </div>
+                <button type="button" class="home-showcase__bell">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 01-3.46 0"></path>
+                    </svg>
+                </button>
+            </header>
+
+            <div class="home-showcase__brands" id="homeShowcaseBrands"></div>
+
+            <section class="home-showcase__section">
+                <div class="home-showcase__section-header">
+                    <h3>Motos populares</h3>
+                    <button type="button">Ver todas</button>
+                </div>
+                <div class="home-showcase__cards">
+                    <article class="home-showcase__card" data-model="Yamaha R15" data-price="5200" data-rating="4.8" data-image="https://i.imgur.com/IdfA3iK.png" data-description="La Yamaha R15 combina diseño deportivo y agilidad urbana, perfecta para un estilo de vida dinámico." data-capacity="2 Seats" data-speed="220 KM/H" data-power="155 CC">
+                        <img src="https://i.imgur.com/IdfA3iK.png" alt="Yamaha R15" loading="lazy">
+                        <h4>Yamaha R15</h4>
+                        <div class="home-showcase__card-meta">
+                            <span>$ 5,200</span>
+                            <span>⭐ 4.8</span>
+                        </div>
+                    </article>
+                    <article class="home-showcase__card" data-model="Honda CBR 500" data-price="6800" data-rating="4.7" data-image="https://i.imgur.com/rt24bUg.png" data-description="La Honda CBR 500 ofrece equilibrio entre potencia y comodidad para recorrer largas distancias." data-capacity="2 Seats" data-speed="210 KM/H" data-power="471 CC">
+                        <img src="https://i.imgur.com/rt24bUg.png" alt="Honda CBR 500" loading="lazy">
+                        <h4>Honda CBR 500</h4>
+                        <div class="home-showcase__card-meta">
+                            <span>$ 6,800</span>
+                            <span>⭐ 4.7</span>
+                        </div>
+                    </article>
+                    <article class="home-showcase__card" data-model="Kawasaki ZX-6R" data-price="9400" data-rating="4.9" data-image="https://i.imgur.com/mBf7zDN.png" data-description="La Kawasaki ZX-6R es la referencia en motos supersport, con rendimiento y tecnología avanzada." data-capacity="2 Seats" data-speed="248 KM/H" data-power="636 CC">
+                        <img src="https://i.imgur.com/mBf7zDN.png" alt="Kawasaki ZX-6R" loading="lazy">
+                        <h4>Kawasaki ZX-6R</h4>
+                        <div class="home-showcase__card-meta">
+                            <span>$ 9,400</span>
+                            <span>⭐ 4.9</span>
+                        </div>
+                    </article>
+                    <article class="home-showcase__card" data-model="Ducati Panigale" data-price="12500" data-rating="4.6" data-image="https://i.imgur.com/G0I4Hqq.png" data-description="La Ducati Panigale es pura emoción italiana, con diseño icónico y desempeño de competición." data-capacity="1 Seat" data-speed="299 KM/H" data-power="1103 CC">
+                        <img src="https://i.imgur.com/G0I4Hqq.png" alt="Ducati Panigale" loading="lazy">
+                        <h4>Ducati Panigale</h4>
+                        <div class="home-showcase__card-meta">
+                            <span>$ 12,500</span>
+                            <span>⭐ 4.6</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+
+        <nav class="home-showcase__bottom">
+            <button type="button" class="home-showcase__bottom-btn active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                    <path d="M9 22V12h6v10"></path>
+                </svg>
+            </button>
+            <button type="button" class="home-showcase__bottom-btn primary" id="homeStartBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            <button type="button" class="home-showcase__bottom-btn" id="homeProfileBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M18 20a6 6 0 00-12 0"></path>
+                    <circle cx="12" cy="10" r="4"></circle>
+                </svg>
+            </button>
+        </nav>
+    </section>
+
+    <!-- Sección de detalle de producto -->
+    <section class="product-detail" id="productDetail" style="display: none;">
+        <div class="product-detail__wrapper">
+            <div class="product-detail__top">
+                <button type="button" class="product-detail__circle-btn" id="productDetailBackBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <span class="product-detail__title">Detalles</span>
+                <button type="button" class="product-detail__circle-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="product-detail__image">
+                <img id="productDetailImage" src="https://i.imgur.com/IdfA3iK.png" alt="Detalle moto" loading="lazy">
+            </div>
+
+            <div class="product-detail__card">
+                <div class="product-detail__heading">
+                    <div>
+                        <h3 id="productDetailName">TVS Apache RTR 200 4V</h3>
+                        <p class="product-detail__description" id="productDetailDescription">
+                            TVS Apache RTR 200 4V. Placas gratis y trámite 100% en línea.
+                        </p>
+                    </div>
+                    <span class="product-detail__rating" id="productDetailRating">⭐ 4.8</span>
+                </div>
+
+                <div class="product-detail__features">
+                    <div class="product-detail__feature">
+                        <span class="product-detail__feature-icon">💳</span>
+                        <div>
+                            <p class="product-detail__feature-label">Cuotas</p>
+                            <p class="product-detail__feature-value" id="productDetailCapacity">24 Cuotas Q 1,050</p>
+                        </div>
+                    </div>
+                    <div class="product-detail__feature">
+                        <span class="product-detail__feature-icon">🧾</span>
+                        <div>
+                            <p class="product-detail__feature-label">Gasto Adm.</p>
+                            <p class="product-detail__feature-value" id="productDetailSpeed">Gasto adm. Q 2,099</p>
+                        </div>
+                    </div>
+                    <div class="product-detail__feature">
+                        <span class="product-detail__feature-icon">🎉</span>
+                        <div>
+                            <p class="product-detail__feature-label">Promoción</p>
+                            <p class="product-detail__feature-value" id="productDetailPower">Placas Gratis + Trámite 100% Línea</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-detail__footer">
+                    <div>
+                        <p class="product-detail__price-label">Precio</p>
+                        <p class="product-detail__price" id="productDetailPrice">Q 20,990</p>
+                    </div>
+                    <button type="button" class="product-detail__buy-btn">Comprar ahora</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de listado de motos -->
+    <section class="catalog-list" id="catalogList" style="display: none;">
+        <div class="catalog-list__wrapper">
+            <div class="catalog-list__top">
+                <button type="button" class="product-detail__circle-btn" id="catalogListBackBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <span class="catalog-list__title">Todas las motos</span>
+                <button type="button" class="product-detail__circle-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="catalog-list__items" id="catalogListItems">
+                <!-- Items clonados desde home-showcase -->
+            </div>
+        </div>
+
+        <nav class="catalog-list__bottom">
+            <button type="button" class="catalog-list__bottom-btn" id="catalogListHomeBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                    <path d="M9 22V12h6v10"></path>
+                </svg>
+            </button>
+            <button type="button" class="catalog-list__bottom-btn active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z"></path>
+                </svg>
+            </button>
+            <button type="button" class="catalog-list__bottom-btn" id="catalogListProfileBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M18 20a6 6 0 00-12 0"></path>
+                    <circle cx="12" cy="10" r="4"></circle>
+                </svg>
+            </button>
+        </nav>
+    </section>
+
+    <!-- Sección de introducción -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-card">
+            <img class="intro-badge" src="https://i.imgur.com/DZWCIun.png" alt="Badge destacado" loading="lazy">
+            <div class="intro-content">
+                <h1 class="intro-title">La forma más rápida de conseguir tu moto ideal</h1>
+                <p class="intro-description">
+                    Solicita tu crédito y muévete con libertad a donde quieras, cuando quieras.
+                </p>
+                <div class="intro-pagination">
+                    <span class="intro-dot active"></span>
+                    <span class="intro-dot"></span>
+                    <span class="intro-dot"></span>
+                </div>
+            </div>
+            <img class="intro-illustration" src="https://i.imgur.com/LutU5gx.png" alt="Moto deportiva" loading="lazy">
+        </div>
+        <button type="button" class="intro-button" id="introGetStartedBtn">Comenzar</button>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>Registro de Usuario</h1>
@@ -190,11 +409,11 @@
     <div class="auth-container" id="auth-welcome" style="display: none;">
         <div class="auth-content">
             <div class="auth-illustration">
-                <img src="https://i.imgur.com/al5tjvz.png" alt="Ilustración" class="welcome-illustration">
+                <img src="https://i.imgur.com/zCQ9iyX.png" alt="Ilustración" class="welcome-illustration">
             </div>
             
-            <h1 class="auth-title">Gestión Financiera</h1>
-            <p class="auth-subtitle">Solicita tu Crédito Rápido, Confiable y Seguro<br>Acceso inmediato</p>
+            <h1 class="auth-title">Motos Express</h1>
+            <p class="auth-subtitle">Encuentra la moto perfecta y obtén tu crédito al instante</p>
             
             <div class="auth-buttons">
                 <button type="button" class="auth-btn btn-primary" id="goToLoginBtn">Iniciar Sesión</button>
@@ -333,6 +552,17 @@
                     <path d="M2 12l10 5 10-5"></path>
                 </svg>
                 <span class="menu-text">Admin</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <button type="button" class="menu-item" id="menuHomeShowcase">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="menu-text">Inicio</span>
                 <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
