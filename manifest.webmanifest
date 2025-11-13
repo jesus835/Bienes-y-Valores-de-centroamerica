@@ -4,7 +4,7 @@
   "description": "Tvsstore te acerca a la moto ideal con financiamiento inmediato, asesoría confiable y un catálogo actualizado.",
   "start_url": ".",
   "scope": ".",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#f4f6fa",
   "theme_color": "#082d48",
   "icons": [
