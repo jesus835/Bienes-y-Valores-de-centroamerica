@@ -36,11 +36,8 @@
                         </h2>
                     </div>
                 </div>
-                <button type="button" class="home-showcase__bell">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 01-3.46 0"></path>
-                    </svg>
+                <button type="button" class="home-showcase__bell home-showcase__contact-btn" id="homeContactBtn" aria-haspopup="dialog" aria-controls="contactModal">
+                    <img src="Images/charla.png" alt="Contacto" loading="lazy">
                 </button>
             </header>
 
@@ -108,6 +105,48 @@
                 </svg>
             </button>
         </nav>
+        <div class="contact-modal" id="contactModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+            <div class="contact-modal__backdrop" data-contact-modal-close></div>
+            <div class="contact-modal__content">
+                <button type="button" class="contact-modal__close" id="contactModalClose" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <h4 class="contact-modal__title" id="contactModalTitle">Contáctanos</h4>
+                <p class="contact-modal__subtitle">Elige el medio que prefieras para hablar con nosotros.</p>
+                <div class="contact-modal__actions">
+                    <a class="contact-modal__link contact-modal__link--whatsapp" href="https://wa.me/50200000000" target="_blank" rel="noopener noreferrer">
+                        <span class="contact-modal__icon contact-modal__icon--whatsapp" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 12a9.5 9.5 0 0 1-14.51 8.13L2.5 21.5l1.37-4.49A9.5 9.5 0 1 1 21.5 12z"></path>
+                                <path d="M8.5 9.5c.25 1.25.75 2.25 1.5 3s1.75 1.25 3 1.5"></path>
+                                <path d="M14.5 13.5l-.4-.4a1.5 1.5 0 0 0-1.2-.44l-.9.14a2 2 0 0 1-1.78-.55l-.87-.87a2 2 0 0 1-.55-1.78l.14-.9a1.5 1.5 0 0 0-.44-1.2l-.4-.4"></path>
+                            </svg>
+                        </span>
+                        <span class="contact-modal__text">WhatsApp</span>
+                    </a>
+                    <a class="contact-modal__link contact-modal__link--email" href="mailto:contacto@bienesyvaloresca.com">
+                        <span class="contact-modal__icon contact-modal__icon--email" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </span>
+                        <span class="contact-modal__text">Correo electrónico</span>
+                    </a>
+                    <a class="contact-modal__link contact-modal__link--phone" href="tel:+50200000000">
+                        <span class="contact-modal__icon contact-modal__icon--phone" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 4.18 4.18 2 2 0 0 1 6 2h3a2 2 0 0 1 2 1.72c.1.86.34 1.7.7 2.48a2 2 0 0 1-.45 2.18l-1.2 1.2a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.18-.45c.78.36 1.62.6 2.48.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </span>
+                        <span class="contact-modal__text">Llamada directa</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Sección de detalle de producto -->
@@ -117,12 +156,6 @@
                 <button type="button" class="product-detail__circle-btn" id="productDetailBackBtn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </button>
-                <span class="product-detail__title">Detalles</span>
-                <button type="button" class="product-detail__circle-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                     </svg>
                 </button>
             </div>
@@ -135,33 +168,35 @@
                 <div class="product-detail__heading">
                     <div>
                         <h3 id="productDetailName">TVS Apache RTR 200 4V</h3>
-                        <p class="product-detail__description" id="productDetailDescription">
-                            TVS Apache RTR 200 4V. Placas gratis y trámite 100% en línea.
-                        </p>
+                        <div class="product-detail__description-block">
+                            <p class="product-detail__description" id="productDetailDescription">
+                                Consulta las especificaciones completas en el botón de información.
+                            </p>
+                            <button type="button" class="product-detail__info-btn" id="productDetailInfoBtn">
+                                Ver especificaciones
+                            </button>
+                        </div>
                     </div>
-                    <span class="product-detail__rating" id="productDetailRating">⭐ 4.8</span>
+                    <span class="product-detail__rating" id="productDetailRating" hidden></span>
                 </div>
 
                 <div class="product-detail__features">
                     <div class="product-detail__feature">
-                        <span class="product-detail__feature-icon">💳</span>
                         <div>
                             <p class="product-detail__feature-label">Cuotas</p>
-                            <p class="product-detail__feature-value" id="productDetailCapacity">24 Cuotas Q 1,050</p>
+                            <p class="product-detail__feature-value" id="productDetailCapacity">24 Cuotas Q 870</p>
                         </div>
                     </div>
                     <div class="product-detail__feature">
-                        <span class="product-detail__feature-icon">🧾</span>
                         <div>
                             <p class="product-detail__feature-label">Gasto Adm.</p>
-                            <p class="product-detail__feature-value" id="productDetailSpeed">Gasto adm. Q 2,099</p>
+                            <p class="product-detail__feature-value" id="productDetailSpeed">Q 1,739</p>
                         </div>
                     </div>
                     <div class="product-detail__feature">
-                        <span class="product-detail__feature-icon">🎉</span>
                         <div>
                             <p class="product-detail__feature-label">Promoción</p>
-                            <p class="product-detail__feature-value" id="productDetailPower">Placas Gratis + Trámite 100% Línea</p>
+                            <p class="product-detail__feature-value" id="productDetailPower">Trámite 100% Línea</p>
                         </div>
                     </div>
                 </div>
@@ -173,6 +208,13 @@
                     </div>
                     <button type="button" class="product-detail__buy-btn">Comprar ahora</button>
                 </div>
+            </div>
+        </div>
+        <div class="product-detail__modal" id="productDetailModal" aria-hidden="true">
+            <div class="product-detail__modal-content">
+                <button type="button" class="product-detail__modal-close" id="productDetailModalClose" aria-label="Cerrar">×</button>
+                <h4 class="product-detail__modal-title">Especificaciones</h4>
+                <div class="product-detail__modal-body" id="productDetailModalBody"></div>
             </div>
         </div>
     </section>
@@ -201,19 +243,20 @@
             </div>
         </div>
 
-        <nav class="catalog-list__bottom">
-            <button type="button" class="catalog-list__bottom-btn" id="catalogListHomeBtn">
+        <nav class="home-showcase__bottom">
+            <button type="button" class="home-showcase__bottom-btn active" id="catalogListHomeBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
                     <path d="M9 22V12h6v10"></path>
                 </svg>
             </button>
-            <button type="button" class="catalog-list__bottom-btn active">
+            <button type="button" class="home-showcase__bottom-btn primary" id="catalogListStartBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z"></path>
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5l7 7-7 7"></path>
                 </svg>
             </button>
-            <button type="button" class="catalog-list__bottom-btn" id="catalogListProfileBtn">
+            <button type="button" class="home-showcase__bottom-btn" id="catalogListProfileBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M18 20a6 6 0 00-12 0"></path>
                     <circle cx="12" cy="10" r="4"></circle>
@@ -634,7 +677,8 @@
                     <p id="modalMessage"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="modal-btn" id="modalOkBtn">CERRAR</button>
+                    <button type="button" class="modal-btn modal-btn--cancel" id="modalCancelBtn">NO</button>
+                    <button type="button" class="modal-btn modal-btn--confirm" id="modalOkBtn">SÍ</button>
                 </div>
             </div>
         </div>

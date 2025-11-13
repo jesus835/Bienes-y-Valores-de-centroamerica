@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const homeShowcase = document.getElementById('homeShowcase');
     const homeStartBtn = document.getElementById('homeStartBtn');
     const homeProfileBtn = document.getElementById('homeProfileBtn');
+    const homeContactBtn = document.getElementById('homeContactBtn');
     const homeShowcaseBrands = document.getElementById('homeShowcaseBrands') || document.querySelector('.home-showcase__brands');
     const menuHomeShowcase = document.getElementById('menuHomeShowcase');
     const productDetail = document.getElementById('productDetail');
@@ -22,78 +23,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const productDetailSpeed = document.getElementById('productDetailSpeed');
     const productDetailPower = document.getElementById('productDetailPower');
     const productDetailPrice = document.getElementById('productDetailPrice');
+    const productDetailInfoBtn = document.getElementById('productDetailInfoBtn');
+    const productDetailModal = document.getElementById('productDetailModal');
+    const productDetailModalBody = document.getElementById('productDetailModalBody');
+    const productDetailModalClose = document.getElementById('productDetailModalClose');
     const productDetailBuyBtn = document.querySelector('.product-detail__buy-btn');
+    const contactModal = document.getElementById('contactModal');
+    const contactModalClose = document.getElementById('contactModalClose');
+    const contactModalBackdrop = contactModal ? contactModal.querySelector('[data-contact-modal-close]') : null;
+    const contactModalLinks = document.querySelectorAll('.contact-modal__link');
     const catalogList = document.getElementById('catalogList');
     const catalogListItems = document.getElementById('catalogListItems');
     const catalogListBackBtn = document.getElementById('catalogListBackBtn');
     const catalogListHomeBtn = document.getElementById('catalogListHomeBtn');
     const catalogListProfileBtn = document.getElementById('catalogListProfileBtn');
+
+    document.querySelectorAll('.catalog-list__item-rating').forEach(el => el.remove());
     let currentStep = 1;
     let origenDetalle = 'home';
     let ultimaMotoSeleccionada = null;
+    let ultimaDescripcionEspecificaciones = '';
     const MOTOS_API_URL = 'https://script.google.com/macros/s/AKfycbwMvaKE6Mh8e9vZWcrQTiLeBORPkyeu3TuE1OlpB6wgh5Yl_dk-acHNlxcpx29K0sA5/exec';
     const LOGIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU4ZkKAUYLRG6TdJAxwGk921LcHnBiU2pzxa_Yk6g3h_pCMqUZEjuwXtq3fDChr2oe/exec';
     const REGISTER_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-jI6oMlKNmteiK3XMiYNrzoqSUkYA7wtEuKbirRmTrZCDZXCuLH9JjxTSXF2GowivQg/exec';
     const DEFAULT_BIKE_IMAGE = 'https://i.imgur.com/1Mi2DWr.png';
     const APACHE_BRAND_IMAGE = 'https://i.imgur.com/SIsl6dt.png';
-    const FALLBACK_MOTOS = [
-        {
-            id: 'fallback-1',
-            marca: 'TVS',
-            linea: 'Apache RTR 200 4V',
-            nombre: 'TVS Apache RTR 200 4V',
-            precioTexto: 'Q 20,990',
-            precioNumero: 20990,
-            rating: '4.8',
-            descripcion: 'TVS Apache RTR 200 4V. Placas gratis y trámite 100% en línea.',
-            cuotas: '24 Cuotas Q 1,050',
-            gasto: 'Gasto adm. Q 2,099',
-            promocion: 'Placas Gratis + Trámite 100% Línea',
-            imagen: 'https://i.imgur.com/IdfA3iK.png'
-        },
-        {
-            id: 'fallback-2',
-            marca: 'TVS',
-            linea: 'Ronin 225',
-            nombre: 'TVS Ronin 225',
-            precioTexto: 'Q 29,000',
-            precioNumero: 29000,
-            rating: '4.6',
-            descripcion: 'TVS Ronin 225. Estilo urbano premium con motor de alto desempeño.',
-            cuotas: '24 Cuotas Q 1,451',
-            gasto: 'Gasto adm. Q 2,900',
-            promocion: 'Placas Gratis - Trámite 100% Línea',
-            imagen: 'https://i.imgur.com/rt24bUg.png'
-        },
-        {
-            id: 'fallback-3',
-            marca: 'TVS',
-            linea: 'Raider 125',
-            nombre: 'TVS Raider 125',
-            precioTexto: 'Q 15,290',
-            precioNumero: 15290,
-            rating: '4.5',
-            descripcion: 'TVS Raider 125. Ahorro de combustible con diseño agresivo.',
-            cuotas: '24 Cuotas Q 765',
-            gasto: 'Gasto adm. Q 1,529',
-            promocion: 'Placas Gratis - Promoción por tiempo limitado',
-            imagen: 'https://i.imgur.com/mBf7zDN.png'
-        },
-        {
-            id: 'fallback-4',
-            marca: 'TVS',
-            linea: 'NTORQ 125',
-            nombre: 'TVS NTORQ 125',
-            precioTexto: 'Q 14,990',
-            precioNumero: 14990,
-            rating: '4.4',
-            descripcion: 'TVS NTORQ 125. Scooter conectado con estilo deportivo y tecnología SmartXonnect.',
-            cuotas: '24 Cuotas Q 750',
-            gasto: 'Gasto adm. Q 1,499',
-            promocion: 'Placas Gratis + Trámite 100% Línea',
-            imagen: 'https://i.imgur.com/G0I4Hqq.png'
-        }
-    ];
+    const FALLBACK_MOTOS = [];
     let motosData = [];
     let lineaSeleccionada = null;
     const numeroDpiInput = document.getElementById('numero_dpi');
@@ -115,6 +70,95 @@ document.addEventListener('DOMContentLoaded', function() {
     sanitizarInputNumerico(numeroDpiInput);
     sanitizarInputNumerico(nitInput);
     sanitizarInputNumerico(telefonoInput);
+
+    function formatearEspecificacionesParaModal(texto) {
+        if (!texto) return '<p>Información no disponible.</p>';
+        let limpio = texto.replace(/^especificaciones\s*:?\s*/i, '').trim();
+        if (!limpio) return '<p>Información no disponible.</p>';
+        const partes = limpio.split(';').map(parte => parte.trim()).filter(Boolean);
+        if (partes.length === 0) {
+            return `<p>${limpio}</p>`;
+        }
+        const items = partes.map(parte => `<li>${parte}</li>`).join('');
+        return `<ul>${items}</ul>`;
+    }
+
+    function abrirModalEspecificaciones() {
+        if (!productDetailModal || !productDetailModalBody) return;
+        productDetailModalBody.innerHTML = formatearEspecificacionesParaModal(ultimaDescripcionEspecificaciones);
+        productDetailModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalEspecificaciones() {
+        if (!productDetailModal) return;
+        productDetailModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    if (productDetailInfoBtn) {
+        productDetailInfoBtn.addEventListener('click', () => {
+            if (productDetailInfoBtn.disabled) return;
+            abrirModalEspecificaciones();
+        });
+    }
+
+    if (productDetailModalClose) {
+        productDetailModalClose.addEventListener('click', cerrarModalEspecificaciones);
+    }
+
+    if (productDetailModal) {
+        productDetailModal.addEventListener('click', (event) => {
+            if (event.target === productDetailModal) {
+                cerrarModalEspecificaciones();
+            }
+        });
+    }
+
+    function abrirModalContacto() {
+        if (!contactModal) return;
+        contactModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalContacto() {
+        if (!contactModal) return;
+        contactModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (homeContactBtn) {
+            homeContactBtn.focus();
+        }
+    }
+
+    if (homeContactBtn) {
+        homeContactBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            abrirModalContacto();
+        });
+    }
+
+    if (contactModalClose) {
+        contactModalClose.addEventListener('click', cerrarModalContacto);
+    }
+
+    if (contactModalBackdrop) {
+        contactModalBackdrop.addEventListener('click', cerrarModalContacto);
+    }
+
+    if (contactModalLinks && contactModalLinks.length) {
+        contactModalLinks.forEach(link => {
+            link.addEventListener('click', cerrarModalContacto);
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && productDetailModal && productDetailModal.getAttribute('aria-hidden') === 'false') {
+            cerrarModalEspecificaciones();
+        }
+        if (event.key === 'Escape' && contactModal && contactModal.getAttribute('aria-hidden') === 'false') {
+            cerrarModalContacto();
+        }
+    });
 
     // Verificar que los elementos existan
     if (!form || !submitBtn) {
@@ -931,24 +975,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Función para cerrar modal
-    function cerrarModal() {
+    function cerrarModal(ejecutarCallback = false) {
         const modal = document.getElementById('warningModal');
         if (modal) {
             modal.style.display = 'none';
-            // Ejecutar callback si existe
-            if (modalCallback) {
-                modalCallback();
-                modalCallback = null;
-            }
+        }
+        
+        if (ejecutarCallback && typeof modalCallback === 'function') {
+            const callback = modalCallback;
+            modalCallback = null;
+            callback();
+        } else {
+            modalCallback = null;
         }
     }
     
     // Event listeners para cerrar modal
     const modalOkBtn = document.getElementById('modalOkBtn');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
     const warningModal = document.getElementById('warningModal');
     
     if (modalOkBtn) {
-        modalOkBtn.addEventListener('click', cerrarModal);
+        modalOkBtn.addEventListener('click', () => cerrarModal(true));
+    }
+    
+    if (modalCancelBtn) {
+        modalCancelBtn.addEventListener('click', () => cerrarModal(false));
     }
     
     // Cerrar modal al hacer clic fuera del contenido
@@ -1366,11 +1418,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Verificar si el usuario es admin y mostrar/ocultar botón Admin
     function verificarAdmin() {
         const menuAdmin = document.getElementById('menuAdmin');
+        const section4 = document.getElementById('section-4');
         if (!menuAdmin) return;
         
         const usuarioLogueado = localStorage.getItem('usuario_logueado');
         if (!usuarioLogueado) {
             menuAdmin.style.display = 'none';
+            if (section4) {
+                section4.classList.remove('profile-container--admin');
+            }
             return;
         }
         
@@ -1380,11 +1436,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (esAdmin) {
                 menuAdmin.style.display = 'flex';
+                if (section4) {
+                    section4.classList.add('profile-container--admin');
+                }
             } else {
                 menuAdmin.style.display = 'none';
+                if (section4) {
+                    section4.classList.remove('profile-container--admin');
+                }
             }
         } catch (e) {
             menuAdmin.style.display = 'none';
+            if (section4) {
+                section4.classList.remove('profile-container--admin');
+            }
         }
     }
     
@@ -1769,7 +1834,6 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteAccountBtn.addEventListener('click', function() {
             cerrarModalConfiguracion();
             mostrarModal('¿Estás seguro de que deseas borrar tu cuenta? Esta acción no se puede deshacer.', function() {
-                // Obtener email del usuario logueado
                 const usuarioLogueado = localStorage.getItem('usuario_logueado');
                 if (!usuarioLogueado) {
                     mostrarModal('No se encontró información del usuario');
@@ -1785,7 +1849,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
-                    // Crear formulario temporal para eliminar el usuario
                     const formTemp = document.createElement('form');
                     formTemp.method = 'POST';
                     formTemp.action = REGISTER_SCRIPT_URL;
@@ -1794,7 +1857,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     formTemp.style.position = 'absolute';
                     formTemp.style.left = '-9999px';
                     
-                    // Agregar campos al formulario
                     const inputEmail = document.createElement('input');
                     inputEmail.type = 'hidden';
                     inputEmail.name = 'Email';
@@ -1807,20 +1869,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     inputAction.value = 'delete_user';
                     formTemp.appendChild(inputAction);
                     
-                    // Agregar formulario al body
                     document.body.appendChild(formTemp);
-                    
-                    // Enviar formulario
                     formTemp.submit();
                     
-                    // Remover formulario temporal después de enviar
                     setTimeout(function() {
                         if (formTemp && formTemp.parentNode) {
                             formTemp.parentNode.removeChild(formTemp);
                         }
                     }, 1000);
                     
-                    // Limpiar localStorage y recargar después de un tiempo
                     setTimeout(function() {
                         localStorage.clear();
                         window.location.reload();
@@ -2148,6 +2205,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const descripcionPartes = [nombre];
         if (item?.promoción) descripcionPartes.push(item.promoción);
         const descripcion = descripcionPartes.filter(Boolean).join('. ');
+        const cuotasDetalle = item?.cuotas_detalle || item?.cuotasDetalle || item?.cuotas_texto || item?.cuotasTexto;
+        const cuotas = cuotasDetalle && cuotasDetalle.trim()
+            ? cuotasDetalle.trim()
+            : (item?.cuotas && item.cuotas.toString().trim()) || 'Sin cuotas disponibles';
         return {
             id: item?.id || `${prefix}-${index}`,
             marca,
@@ -2157,7 +2218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             precioNumero,
             rating,
             descripcion: descripcion || 'Consulta condiciones con nuestros asesores.',
-            cuotas: item?.cuotas || 'Sin cuotas disponibles',
+            cuotas,
             gasto: item?.gasto_administrativo || 'Sin gasto administrativo',
             promocion: item?.promoción || 'Sin promoción vigente',
             imagen: limpiarUrlImagen(item?.imagen) || DEFAULT_BIKE_IMAGE,
@@ -2202,6 +2263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!nombre) return '';
         return nombre.replace(/\s*\(/, '<br>(');
     }
+
 
     function renderBrandButtons() {
         if (!homeShowcaseBrands) return;
@@ -2296,13 +2358,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (productDetailImage) productDetailImage.src = moto.imagen;
         if (productDetailName) productDetailName.textContent = moto.nombre;
-        if (productDetailRating) productDetailRating.textContent = `⭐ ${moto.rating}`;
+        if (productDetailRating) productDetailRating.hidden = true;
         if (productDetailDescription) {
-            productDetailDescription.textContent = moto.descripcion.replace(/-?\s*Placas\s+Gratis\s*-?/gi, '').replace(/\s{2,}/g, ' ').trim();
+            let descripcion = (moto.descripcion || '');
+            descripcion = descripcion.replace(/-?\s*Placas\s+Gratis\s*-?/gi, '');
+            descripcion = descripcion.replace(/\btrámite 100%\s*línea\b/gi, '');
+            const matchEspec = descripcion.match(/(espec\w*)\s*:?\s*/i);
+            if (matchEspec) {
+                descripcion = descripcion.slice(matchEspec.index + matchEspec[0].length).trim();
+            }
+            descripcion = descripcion.replace(/\s{2,}/g, ' ').trim().replace(/^\.*/, '').trim();
+            ultimaDescripcionEspecificaciones = descripcion;
+            if (productDetailInfoBtn) {
+                productDetailInfoBtn.disabled = !descripcion;
+            }
+            productDetailDescription.textContent = descripcion
+                ? 'Consulta las especificaciones'
+                : 'Información no disponible.';
+            cerrarModalEspecificaciones();
         }
         if (productDetailCapacity) productDetailCapacity.textContent = moto.cuotas;
         if (productDetailSpeed) productDetailSpeed.textContent = moto.gasto;
-        if (productDetailPower) productDetailPower.textContent = 'Placas Gratis';
+        if (productDetailPower) {
+            const promocionOriginal = (moto.promocion || '').trim();
+            const match = promocionOriginal.match(/(.+?)(?:[-–—]\s*)?(espec\w*)/i);
+            let promocion;
+            if (match) {
+                promocion = match[1];
+            } else {
+                promocion = promocionOriginal;
+            }
+            promocion = promocion.replace(/[-–—:;,.\s]+$/,'').trim();
+            productDetailPower.textContent = promocion || 'Trámite 100% Línea';
+        }
         if (productDetailPrice) productDetailPrice.textContent = moto.precioTexto;
 
         productDetail.style.display = 'flex';
@@ -2344,11 +2432,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = document.createElement('article');
             card.className = 'home-showcase__card home-showcase__card--featured';
             card.innerHTML = `
-                <button type="button" class="home-showcase__card-fav" aria-label="Agregar a favoritos">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                        <path d="M12 21s-6.5-4.35-9-7.92C1.86 10.65 2.07 7.46 4.4 5.4c2.33-2.05 5.47-1.53 7.6.92 2.13-2.45 5.27-2.97 7.6-.92 2.33 2.06 2.54 5.25 1.4 7.68C18.5 16.65 12 21 12 21z"></path>
-                    </svg>
-                </button>
                 <div class="home-showcase__card-image">
                     <img src="${moto.imagen}" alt="${moto.nombre}" loading="lazy">
                 </div>
@@ -2356,17 +2439,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>${formatearTituloCard(moto.nombre)}</h4>
                     <div class="home-showcase__card-meta">
                         <span class="home-showcase__card-price">${moto.precioTexto}</span>
-                        <span class="home-showcase__card-rating">${moto.rating}</span>
                     </div>
                 </div>
             `;
-            const favBtn = card.querySelector('.home-showcase__card-fav');
-            if (favBtn) {
-                favBtn.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    favBtn.classList.toggle('active');
-                });
-            }
             card.addEventListener('click', () => mostrarDetalleMoto(moto, 'home'));
             container.appendChild(card);
         });
@@ -2384,7 +2459,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="catalog-list__item-body">
                     <div>
                         <h4 class="catalog-list__item-title">${formatearTituloCard(moto.nombre)}</h4>
-                        <div class="catalog-list__item-rating">⭐ ${moto.rating}</div>
                     </div>
                     <div class="catalog-list__item-btns">
                         <div class="catalog-list__item-price">${moto.precioTexto}</div>
