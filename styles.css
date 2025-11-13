@@ -10,6 +10,10 @@ body {
     min-height: 100vh;
     padding: 20px;
     overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor: default;
 }
 
 button {
@@ -20,6 +24,20 @@ button:focus,
 button:focus-visible {
     outline: none;
     box-shadow: none;
+}
+
+input,
+textarea,
+select {
+    user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    cursor: text;
+}
+
+a,
+button {
+    cursor: pointer;
 }
 
 .intro-screen {
