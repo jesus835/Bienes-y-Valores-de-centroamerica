@@ -455,6 +455,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerStatus = document.getElementById('registerStatus');
     const registerStatusText = document.getElementById('registerStatusText');
     const mainContainer = document.querySelector('.container');
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(registration => {
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (!newWorker) return;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                        window.location.reload();
+                    }
+                });
+            });
+        })
+            .catch(error => {
+            console.error('Error al registrar el Service Worker:', error);
+        });
+    }
     
     // Verificar si hay sesión guardada
     const usuarioLogueado = localStorage.getItem('usuario_logueado');

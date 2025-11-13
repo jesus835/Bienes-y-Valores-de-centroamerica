@@ -1,0 +1,23 @@
+{
+  "name": "TvsStore",
+  "short_name": "TvsStore",
+  "description": "Tvsstore te acerca a la moto ideal con financiamiento inmediato, asesoría confiable y un catálogo actualizado.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#082d48",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/Cn7jzVA.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/Cn7jzVA.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
