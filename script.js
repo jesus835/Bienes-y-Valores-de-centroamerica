@@ -474,6 +474,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Lógica del toast de instalación PWA
+    let deferredPrompt = null;
+    const installToast = document.getElementById('installToast');
+    const installToastInstallBtn = document.getElementById('installToastInstallBtn');
+    const installToastCloseBtn = document.getElementById('installToastCloseBtn');
+    
+    // Función para verificar si la app está instalada
+    function isAppInstalled() {
+        // Verificar si está en modo standalone (instalada)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            return true;
+        }
+        // Verificar iOS
+        if (window.navigator.standalone === true) {
+            return true;
+        }
+        return false;
+    }
+    
+    // Función para mostrar el toast
+    function showInstallToast() {
+        // Verificar si el usuario ya cerró el toast antes
+        const toastDismissed = localStorage.getItem('installToastDismissed');
+        if (toastDismissed === 'true') {
+            return;
+        }
+        
+        // No mostrar si ya está instalada
+        if (isAppInstalled()) {
+            return;
+        }
+        
+        if (installToast) {
+            installToast.style.display = 'block';
+        }
+    }
+    
+    // Función para ocultar el toast
+    function hideInstallToast() {
+        if (installToast) {
+            installToast.style.display = 'none';
+        }
+    }
+    
+    // Capturar el evento beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevenir el prompt automático
+        e.preventDefault();
+        // Guardar el evento para usarlo después
+        deferredPrompt = e;
+        // Mostrar el toast después de un pequeño delay
+        setTimeout(showInstallToast, 2000);
+    });
+    
+    // Si no hay beforeinstallprompt (algunos navegadores), verificar después de cargar
+    window.addEventListener('load', () => {
+        // Esperar un poco para que se dispare beforeinstallprompt si va a hacerlo
+        setTimeout(() => {
+            // Si no se capturó el evento pero tampoco está instalada, mostrar el toast
+            if (!deferredPrompt && !isAppInstalled()) {
+                showInstallToast();
+            }
+        }, 3000);
+    });
+    
+    // Botón de instalar
+    if (installToastInstallBtn) {
+        installToastInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Mostrar el prompt de instalación
+                deferredPrompt.prompt();
+                // Esperar a que el usuario responda
+                const { outcome } = await deferredPrompt.userChoice;
+                // Limpiar el prompt guardado
+                deferredPrompt = null;
+                // Ocultar el toast
+                hideInstallToast();
+            } else {
+                // Si no hay prompt disponible, mostrar instrucciones
+                alert('Para instalar la app:\n\nEn Chrome: Menú (⋮) > Instalar aplicación\nEn Safari: Compartir > Agregar a pantalla de inicio');
+                hideInstallToast();
+            }
+        });
+    }
+    
+    // Botón de cerrar
+    if (installToastCloseBtn) {
+        installToastCloseBtn.addEventListener('click', () => {
+            hideInstallToast();
+            // Guardar que el usuario cerró el toast
+            localStorage.setItem('installToastDismissed', 'true');
+        });
+    }
+    
     // Verificar si hay sesión guardada
     const usuarioLogueado = localStorage.getItem('usuario_logueado');
     const tieneSesion = usuarioLogueado && usuarioLogueado !== 'null' && usuarioLogueado !== '';

@@ -742,6 +742,32 @@
         </div>
     </div>
 
+    <!-- Toast de instalación PWA -->
+    <div class="install-toast" id="installToast" style="display: none;">
+        <div class="install-toast__content">
+            <div class="install-toast__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            <div class="install-toast__text">
+                <p class="install-toast__title">Instala TvsStore</p>
+                <p class="install-toast__message">Agrega la app a tu pantalla principal para acceso rápido</p>
+            </div>
+            <div class="install-toast__actions">
+                <button type="button" class="install-toast__btn install-toast__btn--install" id="installToastInstallBtn">Instalar</button>
+                <button type="button" class="install-toast__btn install-toast__btn--close" id="installToastCloseBtn" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
