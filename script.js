@@ -493,6 +493,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
     
+    // Función para verificar si estamos en login o perfil
+    function isInLoginOrProfile() {
+        const section4 = document.getElementById('section-4');
+        
+        const isLogin = (authLogin && authLogin.style.display !== 'none') || 
+                       (authWelcome && authWelcome.style.display !== 'none');
+        const isProfile = section4 && section4.style.display !== 'none';
+        
+        return isLogin || isProfile;
+    }
+    
     // Función para mostrar el toast
     function showInstallToast() {
         // Verificar si el usuario ya cerró el toast antes
@@ -503,6 +514,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // No mostrar si ya está instalada
         if (isAppInstalled()) {
+            return;
+        }
+        
+        // Solo mostrar en login o perfil
+        if (!isInLoginOrProfile()) {
             return;
         }
         
@@ -518,45 +534,105 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Función compartida para instalar la app
+    async function triggerInstall() {
+        if (deferredPrompt) {
+            // Mostrar el prompt de instalación
+            deferredPrompt.prompt();
+            // Esperar a que el usuario responda
+            const { outcome } = await deferredPrompt.userChoice;
+            // Limpiar el prompt guardado
+            deferredPrompt = null;
+            // Ocultar el toast
+            hideInstallToast();
+        } else {
+            // Si no hay prompt disponible, mostrar instrucciones
+            alert('Para instalar la app:\n\nEn Chrome: Menú (⋮) > Instalar aplicación\nEn Safari: Compartir > Agregar a pantalla de inicio');
+            hideInstallToast();
+        }
+    }
+    
     // Capturar el evento beforeinstallprompt
     window.addEventListener('beforeinstallprompt', (e) => {
         // Prevenir el prompt automático
         e.preventDefault();
         // Guardar el evento para usarlo después
         deferredPrompt = e;
-        // Mostrar el toast después de un pequeño delay
-        setTimeout(showInstallToast, 2000);
+        // Mostrar el toast después de un pequeño delay solo si estamos en login/perfil
+        setTimeout(() => {
+            if (isInLoginOrProfile()) {
+                showInstallToast();
+            }
+        }, 2000);
     });
+    
+    // Función para verificar y mostrar toast cuando cambia la vista
+    function checkAndShowToast() {
+        if (!isAppInstalled() && isInLoginOrProfile()) {
+            const toastDismissed = localStorage.getItem('installToastDismissed');
+            if (toastDismissed !== 'true' && deferredPrompt) {
+                setTimeout(showInstallToast, 1000);
+            }
+        } else {
+            hideInstallToast();
+        }
+    }
+    
+    // Observar cambios en las pantallas de login
+    if (authLogin) {
+        const observerLogin = new MutationObserver(checkAndShowToast);
+        observerLogin.observe(authLogin, { attributes: true, attributeFilter: ['style'] });
+    }
+    
+    if (authWelcome) {
+        const observerWelcome = new MutationObserver(checkAndShowToast);
+        observerWelcome.observe(authWelcome, { attributes: true, attributeFilter: ['style'] });
+    }
     
     // Si no hay beforeinstallprompt (algunos navegadores), verificar después de cargar
     window.addEventListener('load', () => {
         // Esperar un poco para que se dispare beforeinstallprompt si va a hacerlo
         setTimeout(() => {
-            // Si no se capturó el evento pero tampoco está instalada, mostrar el toast
-            if (!deferredPrompt && !isAppInstalled()) {
+            // Si no se capturó el evento pero tampoco está instalada, mostrar el toast solo en login/perfil
+            if (!deferredPrompt && !isAppInstalled() && isInLoginOrProfile()) {
                 showInstallToast();
             }
         }, 3000);
     });
     
-    // Botón de instalar
+    // Botón de instalar del toast
     if (installToastInstallBtn) {
-        installToastInstallBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                // Mostrar el prompt de instalación
-                deferredPrompt.prompt();
-                // Esperar a que el usuario responda
-                const { outcome } = await deferredPrompt.userChoice;
-                // Limpiar el prompt guardado
-                deferredPrompt = null;
-                // Ocultar el toast
-                hideInstallToast();
+        installToastInstallBtn.addEventListener('click', triggerInstall);
+    }
+    
+    // Botón de instalar del perfil
+    const profileInstallBtn = document.getElementById('profileInstallBtn');
+    if (profileInstallBtn) {
+        // Ocultar botón si la app ya está instalada
+        function updateProfileInstallButton() {
+            if (isAppInstalled()) {
+                profileInstallBtn.style.display = 'none';
             } else {
-                // Si no hay prompt disponible, mostrar instrucciones
-                alert('Para instalar la app:\n\nEn Chrome: Menú (⋮) > Instalar aplicación\nEn Safari: Compartir > Agregar a pantalla de inicio');
-                hideInstallToast();
+                profileInstallBtn.style.display = 'flex';
             }
-        });
+        }
+        
+        // Verificar al cargar y cuando se muestra el perfil
+        updateProfileInstallButton();
+        
+        // Observar cambios en la sección 4 (perfil)
+        const section4 = document.getElementById('section-4');
+        if (section4) {
+            const observer = new MutationObserver(() => {
+                if (section4.style.display !== 'none') {
+                    updateProfileInstallButton();
+                }
+            });
+            observer.observe(section4, { attributes: true, attributeFilter: ['style'] });
+        }
+        
+        // Agregar evento click
+        profileInstallBtn.addEventListener('click', triggerInstall);
     }
     
     // Botón de cerrar
